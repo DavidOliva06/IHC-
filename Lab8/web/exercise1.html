@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 1: Evaluación Heurística - IHC</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fab fa-instagram"></i> Ejercicio 1: Modelo de Nielsen</h1>
+            <nav>
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="exercise1.html" class="nav-link active">Ejercicio 1</a>
+                <a href="#" class="nav-link">Ejercicio 2</a>
+                <a href="#" class="nav-link">Ejercicio 3</a>
+                <a href="#" class="nav-link">Ejercicio 4</a>
+                <a href="#" class="nav-link">Ejercicio 5</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Evaluación Heurística de Instagram</h2>
+            <p><strong>Caso de Estudio:</strong> Aplicación móvil de Instagram (iOS/Android)</p>
+            <p>Este ejercicio analiza la usabilidad de Instagram basándose en las 10 Heurísticas de Usabilidad de Jakob Nielsen.</p>
+        </div>
+
+        <div class="card">
+            <h3>Tabla Comparativa de Problemas Identificados</h3>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Heurística</th>
+                            <th>Problema Identificado</th>
+                            <th>Severidad</th>
+                            <th>Solución Propuesta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>H1: Visibilidad del estado</strong></td>
+                            <td>Sin indicador de progreso al subir historias con conexión lenta</td>
+                            <td><span class="badge badge-high">3 - Mayor</span></td>
+                            <td>Agregar barra de progreso con porcentaje</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H2: Coincidencia sistema/mundo</strong></td>
+                            <td>Íconos "Reels" y "Shop" poco reconocibles para nuevos usuarios</td>
+                            <td><span class="badge badge-medium">2 - Menor</span></td>
+                            <td>Etiquetas de texto temporales</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H3: Control y libertad</strong></td>
+                            <td>No se puede deshacer "Dejar de seguir" inmediatamente</td>
+                            <td><span class="badge badge-high">3 - Mayor</span></td>
+                            <td>Notificación "snackbar" con botón Deshacer</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H4: Consistencia</strong></td>
+                            <td>Gesto de deslizar inconsistente entre secciones</td>
+                            <td><span class="badge badge-medium">2 - Menor</span></td>
+                            <td>Estandarizar gestos de navegación</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H5: Prevención de errores</strong></td>
+                            <td>Publicación accidental de historias por deslizamiento</td>
+                            <td><span class="badge badge-high">3 - Mayor</span></td>
+                            <td>Confirmación antes de publicar</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H6: Reconocimiento</strong></td>
+                            <td>Opciones de privacidad ocultas en menús profundos</td>
+                            <td><span class="badge badge-medium">2 - Menor</span></td>
+                            <td>Centro de privacidad con acceso directo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H7: Flexibilidad</strong></td>
+                            <td>Falta de atajos de teclado en versión web</td>
+                            <td><span class="badge badge-low">1 - Cosmético</span></td>
+                            <td>Implementar atajos (J/K, L, etc.)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H8: Diseño minimalista</strong></td>
+                            <td>Perfiles empresariales saturados de información</td>
+                            <td><span class="badge badge-medium">2 - Menor</span></td>
+                            <td>Pestañas colapsables para info secundaria</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H9: Recuperación de errores</strong></td>
+                            <td>Mensaje "Error al publicar" genérico</td>
+                            <td><span class="badge badge-high">3 - Mayor</span></td>
+                            <td>Mensajes específicos con causa y solución</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H10: Ayuda y documentación</strong></td>
+                            <td>Falta de tutorial para funciones nuevas (Colaboraciones)</td>
+                            <td><span class="badge badge-medium">2 - Menor</span></td>
+                            <td>Tooltips contextuales</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Escala de Severidad Utilizada</h3>
+            <div class="grid">
+                <div>
+                    <ul>
+                        <li><strong>0 - No es problema:</strong> No afecta la usabilidad</li>
+                        <li><strong>1 - Cosmético:</strong> Problema superficial, baja prioridad</li>
+                        <li><strong>2 - Menor:</strong> Problema menor, prioridad media-baja</li>
+                    </ul>
+                </div>
+                <div>
+                    <ul>
+                        <li><strong>3 - Mayor:</strong> Problema importante, prioridad alta</li>
+                        <li><strong>4 - Catastrófico:</strong> Imperativo solucionarlo, máxima prioridad</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Metodología de Evaluación</h3>
+            <ul>
+                <li><strong>Evaluadores:</strong> 2 expertos en UX</li>
+                <li><strong>Tiempo de evaluación:</strong> 2 horas por evaluador</li>
+                <li><strong>Método:</strong> Recorrido cognitivo + evaluación heurística</li>
+                <li><strong>Dispositivos:</strong> iPhone 14 Pro (iOS 17), Samsung Galaxy S23 (Android 13), Web (Chrome)</li>
+            </ul>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Impacto Esperado</h3>
+                <canvas id="impactChart"></canvas>
+            </div>
+            <div class="card">
+                <h3>Distribución de Severidad</h3>
+                <canvas id="severityChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Recomendaciones Prioritarias</h3>
+            <div class="grid">
+                <div>
+                    <h4 style="color: var(--danger-color);">Prioridad Alta</h4>
+                    <ul>
+                        <li>Sistema de notificaciones de deshacer</li>
+                        <li>Mejoras en feedback de estado</li>
+                        <li>Prevención de publicaciones accidentales</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: var(--warning-color);">Prioridad Media</h4>
+                    <ul>
+                        <li>Estandarización de gestos</li>
+                        <li>Optimización de arquitectura de información</li>
+                        <li>Onboarding contextual</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gráfico de Impacto
+        const ctxImpact = document.getElementById('impactChart').getContext('2d');
+        new Chart(ctxImpact, {
+            type: 'bar',
+            data: {
+                labels: ['Reducción Errores', 'Tasa Finalización', 'Satisfacción (NPS)', 'Reducción Tickets'],
+                datasets: [{
+                    label: 'Mejora Esperada (%)',
+                    data: [40, 25, 15, 30],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Severidad
+        const ctxSeverity = document.getElementById('severityChart').getContext('2d');
+        new Chart(ctxSeverity, {
+            type: 'doughnut',
+            data: {
+                labels: ['Mayor (3)', 'Menor (2)', 'Cosmético (1)'],
+                datasets: [{
+                    data: [4, 5, 1], // Conteo basado en la tabla
+                    backgroundColor: [
+                        '#ef4444',
+                        '#f59e0b',
+                        '#10b981'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

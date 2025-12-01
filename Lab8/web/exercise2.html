@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 2: Evaluación ISO 9241-11 - IHC</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-tasks"></i> Ejercicio 2: ISO 9241-11</h1>
+            <nav>
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="exercise1.html" class="nav-link">Ejercicio 1</a>
+                <a href="exercise2.html" class="nav-link active">Ejercicio 2</a>
+                <a href="exercise3.html" class="nav-link">Ejercicio 3</a>
+                <a href="exercise4.html" class="nav-link">Ejercicio 4</a>
+                <a href="exercise5.html" class="nav-link">Ejercicio 5</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Evaluación ISO 9241-11: Portal de Servicios Gubernamentales</h2>
+            <p>Análisis de usabilidad basado en los principios de Eficacia, Eficiencia y Satisfacción.</p>
+        </div>
+
+        <!-- 1. DEFINICIÓN DEL CONTEXTO DE USO -->
+        <div class="card">
+            <h3>1. Definición del Contexto de Uso</h3>
+            
+            <h4>1.1 Perfil de Usuarios</h4>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Usuario Tipo A</strong></td>
+                            <td>Ciudadano adulto mayor (55-75 años), educación secundaria, uso ocasional de internet</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Usuario Tipo B</strong></td>
+                            <td>Adulto joven (25-40 años), educación superior, usuario frecuente de tecnología</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Usuario Tipo C</strong></td>
+                            <td>Emprendedor/empresario (30-55 años), necesita trámites regulares</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid">
+                <div>
+                    <h4>1.2 Tareas Principales</h4>
+                    <ul>
+                        <li><strong>Renovar licencia de conducir</strong> (tarea crítica)</li>
+                        <li><strong>Descargar certificado de antecedentes penales</strong></li>
+                        <li><strong>Pagar impuesto predial en línea</strong></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>1.3 Entorno de Uso</h4>
+                    <ul>
+                        <li><strong>Dispositivo:</strong> 65% móvil, 30% computadora, 5% tablet</li>
+                        <li><strong>Conexión:</strong> Variable (3G-4G-WiFi)</li>
+                        <li><strong>Lugar:</strong> Hogar (70%), trabajo (20%), espacios públicos (10%)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. EVALUACIÓN SEGÚN ISO 9241-11 -->
+        <div class="card">
+            <h3>2. Evaluación según ISO 9241-11</h3>
+            
+            <div class="grid">
+                <!-- Eficacia -->
+                <div>
+                    <h4>2.1 Eficacia (Completación de Tareas)</h4>
+                    <div class="card" style="border-left: 4px solid var(--warning-color);">
+                        <h5>Renovar Licencia</h5>
+                        <p><strong>Problemas:</strong> Formulario extenso, errores de carga.</p>
+                        <p><strong>Resultado:</strong> 55% éxito. <span class="badge badge-medium">2.5/5</span></p>
+                    </div>
+                    <div class="card" style="border-left: 4px solid var(--success-color);">
+                        <h5>Certificado Antecedentes</h5>
+                        <p><strong>Problemas:</strong> Buscador deficiente.</p>
+                        <p><strong>Resultado:</strong> 70% éxito. <span class="badge badge-low">3.5/5</span></p>
+                    </div>
+                    <div class="card" style="border-left: 4px solid var(--danger-color);">
+                        <h5>Pago Impuesto</h5>
+                        <p><strong>Problemas:</strong> Requiere datos no disponibles.</p>
+                        <p><strong>Resultado:</strong> 50% éxito. <span class="badge badge-high">2/5</span></p>
+                    </div>
+                </div>
+
+                <!-- Eficiencia -->
+                <div>
+                    <h4>2.2 Eficiencia (Esfuerzo Requerido)</h4>
+                    <canvas id="efficiencyChart"></canvas>
+                    <p style="margin-top: 1rem;"><strong>Factores de ineficiencia:</strong> Navegación confusa, validación tardía, carga lenta.</p>
+                    <p><strong>Calificación Global:</strong> <span class="badge badge-high">2/5</span></p>
+                </div>
+            </div>
+
+            <!-- Satisfacción -->
+            <div style="margin-top: 2rem;">
+                <h4>2.3 Satisfacción (Experiencia del Usuario)</h4>
+                <div class="grid">
+                    <div>
+                        <p><strong>SUS Score:</strong> 42/100 (Pobre)</p>
+                        <p><em>"No entiendo por qué pide tantos datos que ya tienen"</em></p>
+                        <p><em>"Prefiero ir en persona aunque haga cola"</em></p>
+                    </div>
+                    <div>
+                        <canvas id="satisfactionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. MÉTRICAS CALCULADAS -->
+        <div class="card">
+            <h3>4. Métricas Calculadas</h3>
+            <div class="grid">
+                <div>
+                    <h4>Tasa de Éxito</h4>
+                    <canvas id="successRateChart"></canvas>
+                </div>
+                <div>
+                    <h4>Errores por Tipo</h4>
+                    <canvas id="errorsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. CONCLUSIONES Y RECOMENDACIONES -->
+        <div class="card">
+            <h3>5. Conclusiones y Recomendaciones</h3>
+            
+            <div class="grid">
+                <div>
+                    <h4 style="color: var(--danger-color);">Problemas Críticos (Prioridad Alta)</h4>
+                    <ul>
+                        <li><strong>Arquitectura confusa:</strong> Usuarios no encuentran servicios.</li>
+                        <li><strong>Formularios mal diseñados:</strong> 45% de abandono.</li>
+                        <li><strong>Mensajes de error:</strong> No informativos, causan frustración.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: var(--success-color);">Recomendaciones Inmediatas</h4>
+                    <ul>
+                        <li>Rediseñar mensajes de error con lenguaje claro.</li>
+                        <li>Implementar validación en tiempo real.</li>
+                        <li>Agregar breadcrumbs y mejorar navegación.</li>
+                        <li>Crear página de inicio con servicios top.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gráfico de Eficiencia (Tiempo Esperado vs Real)
+        const ctxEfficiency = document.getElementById('efficiencyChart').getContext('2d');
+        new Chart(ctxEfficiency, {
+            type: 'bar',
+            data: {
+                labels: ['Licencia', 'Certificado', 'Impuesto'],
+                datasets: [
+                    {
+                        label: 'Tiempo Esperado (min)',
+                        data: [5, 3, 4],
+                        backgroundColor: 'rgba(16, 185, 129, 0.6)'
+                    },
+                    {
+                        label: 'Tiempo Real (min)',
+                        data: [18, 9, 14],
+                        backgroundColor: 'rgba(239, 68, 68, 0.6)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Tiempo Esperado vs Real'
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Satisfacción (Distribución)
+        const ctxSatisfaction = document.getElementById('satisfactionChart').getContext('2d');
+        new Chart(ctxSatisfaction, {
+            type: 'doughnut',
+            data: {
+                labels: ['Muy Insatisfecho', 'Insatisfecho', 'Neutral', 'Satisfecho', 'Muy Satisfecho'],
+                datasets: [{
+                    data: [15, 35, 30, 15, 5],
+                    backgroundColor: [
+                        '#ef4444', // Rojo
+                        '#f97316', // Naranja
+                        '#eab308', // Amarillo
+                        '#3b82f6', // Azul
+                        '#22c55e'  // Verde
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribución de Satisfacción'
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Tasa de Éxito
+        const ctxSuccess = document.getElementById('successRateChart').getContext('2d');
+        new Chart(ctxSuccess, {
+            type: 'bar',
+            data: {
+                labels: ['Licencia', 'Certificado', 'Impuesto'],
+                datasets: [{
+                    label: 'Tasa de Éxito (%)',
+                    data: [50, 67, 50],
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.6)',
+                        'rgba(234, 179, 8, 0.6)',
+                        'rgba(239, 68, 68, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(234, 179, 8, 1)',
+                        'rgba(239, 68, 68, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Errores
+        const ctxErrors = document.getElementById('errorsChart').getContext('2d');
+        new Chart(ctxErrors, {
+            type: 'radar',
+            data: {
+                labels: ['Licencia', 'Certificado', 'Impuesto'],
+                datasets: [
+                    {
+                        label: 'Errores Sistema (A)',
+                        data: [1.2, 0.3, 0.8],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.2)'
+                    },
+                    {
+                        label: 'Errores Diseño (B)',
+                        data: [4.5, 2.7, 3.9],
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.2)'
+                    },
+                    {
+                        label: 'Errores Usuario (C)',
+                        data: [2.1, 1.2, 1.5],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Promedio de Errores por Tipo'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

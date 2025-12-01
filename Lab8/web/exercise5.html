@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 5: Estudio de Caso - IHC</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .report-section {
+            margin-bottom: 2rem;
+        }
+        .report-header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .metric-box {
+            background-color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 0.5rem 0;
+        }
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        .data-table th, .data-table td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        .data-table th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+        }
+        .severity-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .sev-5 { background-color: #fee2e2; color: #991b1b; }
+        .sev-4 { background-color: #ffedd5; color: #9a3412; }
+        .sev-3 { background-color: #fef9c3; color: #854d0e; }
+        .sev-2 { background-color: #dcfce7; color: #166534; }
+        
+        .finding-card {
+            border-left: 4px solid var(--primary-color);
+            background-color: #fff;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .persona-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+        .persona-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+        .persona-avatar {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-clipboard-check"></i> Ejercicio 5: Estudio de Caso</h1>
+            <nav>
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="exercise1.html" class="nav-link">Ejercicio 1</a>
+                <a href="exercise2.html" class="nav-link">Ejercicio 2</a>
+                <a href="exercise3.html" class="nav-link">Ejercicio 3</a>
+                <a href="exercise4.html" class="nav-link">Ejercicio 4</a>
+                <a href="exercise5.html" class="nav-link active">Ejercicio 5</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Header del Reporte -->
+        <div class="card report-section">
+            <div class="report-header">
+                <span style="background-color: #e0f2fe; color: #0369a1; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.875rem; font-weight: 600;">Reporte de Usabilidad</span>
+                <h2 style="margin-top: 1rem;">Sistema de Reserva de Citas Médicas "MediReserva"</h2>
+                <p style="color: var(--text-secondary);">Fecha de evaluación: 25-28 de noviembre de 2025</p>
+            </div>
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                <div>
+                    <strong><i class="fas fa-building"></i> Cliente</strong>
+                    <p>Clínica San Rafael</p>
+                </div>
+                <div>
+                    <strong><i class="fas fa-users"></i> Evaluadores</strong>
+                    <p>David Oliva</p>
+                </div>
+                <div>
+                    <strong><i class="fas fa-bullseye"></i> Objetivo</strong>
+                    <p>Evaluar barreras en el flujo de agendamiento de citas.</p>
+                </div>
+        </div>
+
+        <!-- Perfiles -->
+        <h3 class="section-title"><i class="fas fa-user-friends"></i> 2. Perfiles de Participantes</h3>
+        <div class="grid report-section">
+            <div class="persona-card">
+                <div class="persona-header">
+                    <div class="persona-avatar"><i class="fas fa-user"></i></div>
+                    <div>
+                        <h4 style="margin:0;">Rosa Martínez</h4>
+                        <span style="font-size: 0.875rem; color: var(--text-secondary);">58 años | Profesora jubilada</span>
+                    </div>
+                </div>
+                <ul style="list-style: none; padding: 0; font-size: 0.9rem;">
+                    <li style="margin-bottom: 0.5rem;"><i class="fas fa-mobile-alt" style="width: 20px; color: var(--text-secondary);"></i> <strong>Dispositivo:</strong> Smartphone Android</li>
+                    <li style="margin-bottom: 0.5rem;"><i class="fas fa-wifi" style="width: 20px; color: var(--text-secondary);"></i> <strong>Exp. Digital:</strong> Básica</li>
+                    <li><i class="fas fa-history" style="width: 20px; color: var(--text-secondary);"></i> <strong>Frecuencia:</strong> Primera vez</li>
+                </ul>
+            </div>
+            <div class="persona-card">
+                <div class="persona-header">
+                    <div class="persona-avatar" style="background-color: #8b5cf6;"><i class="fas fa-user-tie"></i></div>
+                    <div>
+                        <h4 style="margin:0;">Diego Campos</h4>
+                        <span style="font-size: 0.875rem; color: var(--text-secondary);">32 años | Diseñador gráfico</span>
+                    </div>
+                </div>
+                <ul style="list-style: none; padding: 0; font-size: 0.9rem;">
+                    <li style="margin-bottom: 0.5rem;"><i class="fas fa-laptop" style="width: 20px; color: var(--text-secondary);"></i> <strong>Dispositivo:</strong> Laptop Mac + iPhone</li>
+                    <li style="margin-bottom: 0.5rem;"><i class="fas fa-wifi" style="width: 20px; color: var(--text-secondary);"></i> <strong>Exp. Digital:</strong> Avanzada</li>
+                    <li><i class="fas fa-history" style="width: 20px; color: var(--text-secondary);"></i> <strong>Frecuencia:</strong> 3-4 veces/año</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tarea -->
+        <div class="card report-section" style="background-color: #f8fafc; border-left: 4px solid #3b82f6;">
+            <h3><i class="fas fa-tasks"></i> 3. Tarea Crítica Evaluada</h3>
+            <p><em>"Necesitas agendar una cita con un cardiólogo para la próxima semana. Tienes preferencia por atención en horario de mañana. Usa el sistema para reservar tu cita."</em></p>
+            <div style="margin-top: 1rem;">
+                <strong>Criterios de éxito:</strong>
+                <ol style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                    <li>Encontrar opción de reserva</li>
+                    <li>Seleccionar Cardiología</li>
+                    <li>Elegir fecha/hora disponible</li>
+                    <li>Completar datos</li>
+                    <li>Confirmar reserva</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Resultados Detallados -->
+        <h3 class="section-title"><i class="fas fa-chart-bar"></i> 4. Resultados y Observaciones</h3>
+        
+        <!-- Participante 1 -->
+        <div class="card report-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h4>Participante 1: Rosa (Básica)</h4>
+                <span class="severity-badge sev-5">NO COMPLETÓ LA TAREA</span>
+            </div>
+            <div class="grid" style="grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                <div class="metric-box" style="padding: 0.5rem;">
+                    <div class="metric-value" style="font-size: 1.25rem;">14m 32s</div>
+                    <div class="metric-label">Tiempo</div>
+                </div>
+                <div class="metric-box" style="padding: 0.5rem;">
+                    <div class="metric-value" style="font-size: 1.25rem; color: #dc2626;">7</div>
+                    <div class="metric-label">Errores</div>
+                </div>
+                <div class="metric-box" style="padding: 0.5rem;">
+                    <div class="metric-value" style="font-size: 1.25rem;">3</div>
+                    <div class="metric-label">Ayudas</div>
+                </div>
+                <div class="metric-box" style="padding: 0.5rem;">
+                    <div class="metric-value" style="font-size: 1.25rem;">4/5</div>
+                    <div class="metric-label">Frustración</div>
+                </div>
+            </div>
+            
+            <h5>Errores Críticos Detectados:</h5>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Min</th>
+                        <th>Error</th>
+                        <th>Tipo</th>
+                        <th>Severidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1:20</td>
+                        <td>No encuentra botón "Reservar cita"</td>
+                        <td>Navegación</td>
+                        <td><span class="severity-badge sev-3">Media</span></td>
+                    </tr>
+                    <tr>
+                        <td>4:10</td>
+                        <td>Selecciona fecha no disponible</td>
+                        <td>Diseño</td>
+                        <td><span class="severity-badge sev-4">Alta</span></td>
+                    </tr>
+                    <tr>
+                        <td>12:20</td>
+                        <td>Sistema expira sesión (pérdida de datos)</td>
+                        <td>Sistema</td>
+                        <td><span class="severity-badge sev-5">Crítica</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="font-style: italic; color: #666; border-left: 3px solid #ccc; padding-left: 1rem;">"Los jóvenes capaz lo entienden, pero yo no" - Rosa (min 14:00)</p>
+        </div>
+
+        <!-- Participante 2 -->
+        <div class="card report-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h4>Participante 2: Diego (Avanzado)</h4>
+                <span class="severity-badge sev-2">TAREA COMPLETADA</span>
+            </div>
+            <div class="grid" style="grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                <div class="metric-box" style="padding: 0.5rem;">
+                    <div class="metric-value" style="font-size: 1.25rem;">7m 18s</div>
+                    <div class="metric-label">Tiempo</div>
+                </div>
+                <div class="metric-box" style="padding: 0.5rem;">
+                    <div class="metric-value" style="font-size: 1.25rem; color: #ca8a04;">3</div>
+                    <div class="metric-label">Errores</div>
+                </div>
+                <div class="metric-box" style="padding: 0.5rem;">
+                    <div class="metric-value" style="font-size: 1.25rem;">0</div>
+                    <div class="metric-label">Ayudas</div>
+                </div>
+                <div class="metric-box" style="padding: 0.5rem;">
+                    <div class="metric-value" style="font-size: 1.25rem;">2/5</div>
+                    <div class="metric-label">Frustración</div>
+                </div>
+            </div>
+            
+            <h5>Errores Críticos Detectados:</h5>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Min</th>
+                        <th>Error</th>
+                        <th>Tipo</th>
+                        <th>Severidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2:10</td>
+                        <td>Selecciona fecha pero no se registra</td>
+                        <td>Interacción</td>
+                        <td><span class="severity-badge sev-3">Media</span></td>
+                    </tr>
+                    <tr>
+                        <td>4:35</td>
+                        <td>Botón "Confirmar" no responde al primer clic</td>
+                        <td>Sistema</td>
+                        <td><span class="severity-badge sev-3">Media</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="font-style: italic; color: #666; border-left: 3px solid #ccc; padding-left: 1rem;">"Estaría bueno un feedback visual cuando hago clic" - Diego (min 4:50)</p>
+        </div>
+
+        <!-- Análisis Comparativo -->
+        <div class="card report-section">
+            <h3><i class="fas fa-balance-scale"></i> 5. Análisis Comparativo</h3>
+            <p>El usuario con menor experiencia digital tardó casi el doble en cada fase. La fase más problemática para ambos fue la selección de fecha/hora.</p>
+            
+            <table class="data-table" style="margin-top: 1rem;">
+                <thead>
+                    <tr>
+                        <th>Fase del Proceso</th>
+                        <th>P1 - Rosa</th>
+                        <th>P2 - Diego</th>
+                        <th>Diferencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Encontrar opción</td>
+                        <td>3:45</td>
+                        <td>0:40</td>
+                        <td style="color: #dc2626;">+3:05</td>
+                    </tr>
+                    <tr>
+                        <td>Seleccionar especialidad</td>
+                        <td>2:20</td>
+                        <td>1:15</td>
+                        <td style="color: #dc2626;">+1:05</td>
+                    </tr>
+                    <tr>
+                        <td>Elegir fecha/hora</td>
+                        <td>4:10</td>
+                        <td>2:30</td>
+                        <td style="color: #dc2626;">+1:40</td>
+                    </tr>
+                    <tr>
+                        <td>Completar formulario</td>
+                        <td>4:17</td>
+                        <td>2:13</td>
+                        <td style="color: #dc2626;">+2:04</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Heurísticas -->
+        <h3 class="section-title"><i class="fas fa-exclamation-triangle"></i> 6. Problemas Identificados (Nielsen)</h3>
+        <div class="grid report-section">
+            <div class="finding-card" style="border-left-color: #ef4444;">
+                <div style="display: flex; justify-content: space-between;">
+                    <strong>H1 - Visibilidad del estado</strong>
+                    <span class="severity-badge sev-5">Catastrófica</span>
+                </div>
+                <p style="margin: 0.5rem 0;">El sistema cierra sesión a los 10 minutos sin advertencia, borrando todos los datos.</p>
+                <small>Impacto: Abandono del usuario.</small>
+            </div>
+
+            <div class="finding-card" style="border-left-color: #f97316;">
+                <div style="display: flex; justify-content: space-between;">
+                    <strong>H5 - Prevención de errores</strong>
+                    <span class="severity-badge sev-4">Mayor</span>
+                </div>
+                <p style="margin: 0.5rem 0;">Calendario permite seleccionar fechas no disponibles, mostrando error solo al final.</p>
+                <small>Impacto: Frustración y retrabajo.</small>
+            </div>
+
+            <div class="finding-card" style="border-left-color: #eab308;">
+                <div style="display: flex; justify-content: space-between;">
+                    <strong>H9 - Recuperación de errores</strong>
+                    <span class="severity-badge sev-3">Mayor</span>
+                </div>
+                <p style="margin: 0.5rem 0;">Mensajes de error diminutos al pie de página, difíciles de ver.</p>
+                <small>Impacto: Usuario no sabe cómo corregir.</small>
+            </div>
+
+            <div class="finding-card" style="border-left-color: #22c55e;">
+                <div style="display: flex; justify-content: space-between;">
+                    <strong>H2 - Coincidencia sistema/realidad</strong>
+                    <span class="severity-badge sev-2">Menor</span>
+                </div>
+                <p style="margin: 0.5rem 0;">Terminología médica técnica (ej: "Cardiología" sin iconos o ayuda).</p>
+                <small>Impacto: Confusión en usuarios básicos.</small>
+            </div>
+        </div>
+
+        <!-- Métricas Consolidadas -->
+        <div class="card report-section">
+            <h3><i class="fas fa-tachometer-alt"></i> 7. Métricas Consolidadas</h3>
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                <div style="text-align: center;">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: #dc2626;">50%</div>
+                    <div style="font-weight: bold;">Tasa de Éxito</div>
+                    <div style="font-size: 0.8rem; color: #666;">Benchmark: 85%</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: #f59e0b;">10:55</div>
+                    <div style="font-weight: bold;">Tiempo Promedio</div>
+                    <div style="font-size: 0.8rem; color: #666;">Objetivo: 4:00</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: #dc2626;">5</div>
+                    <div style="font-weight: bold;">Errores Promedio</div>
+                    <div style="font-size: 0.8rem; color: #666;">Aceptable: 1-2</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: #dc2626;">2.5/5</div>
+                    <div style="font-weight: bold;">Satisfacción</div>
+                    <div style="font-size: 0.8rem; color: #666;">Mínimo: 4.0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recomendaciones -->
+        <div class="card report-section">
+            <h3><i class="fas fa-check-circle"></i> 9. Recomendaciones Prioritarias</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Prioridad</th>
+                        <th>Acción Recomendada</th>
+                        <th>Impacto Esperado</th>
+                        <th>Esfuerzo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="severity-badge sev-5">CRÍTICA</span></td>
+                        <td>Eliminar timeout o implementar guardado automático</td>
+                        <td>+40% tasa de éxito</td>
+                        <td>Medio</td>
+                    </tr>
+                    <tr>
+                        <td><span class="severity-badge sev-5">CRÍTICA</span></td>
+                        <td>Deshabilitar fechas no disponibles en calendario</td>
+                        <td>-60% errores</td>
+                        <td>Bajo</td>
+                    </tr>
+                    <tr>
+                        <td><span class="severity-badge sev-5">CRÍTICA</span></td>
+                        <td>Mover mensajes de error junto a campos (inline)</td>
+                        <td>+30% detección</td>
+                        <td>Bajo</td>
+                    </tr>
+                    <tr>
+                        <td><span class="severity-badge sev-3">ALTA</span></td>
+                        <td>Agregar indicadores de carga en botones</td>
+                        <td>+20% confianza</td>
+                        <td>Bajo</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Conclusiones -->
+        <div class="card report-section" style="background-color: #f0f9ff; border: 1px solid #bae6fd;">
+            <h3><i class="fas fa-lightbulb"></i> 10. Conclusiones</h3>
+            <p>El sistema presenta <strong>problemas severos de usabilidad</strong> que impactan especialmente a usuarios de edad avanzada. La tasa de éxito del 50% es inaceptable para un proceso crítico.</p>
+            <ul style="margin-top: 1rem;">
+                <li>El problema más grave es la pérdida de datos por timeout.</li>
+                <li>Existe una brecha de usabilidad de 2x entre usuarios expertos y básicos.</li>
+                <li>Se estima que el 50% de usuarios potenciales abandonan el proceso.</li>
+            </ul>
+            <p style="margin-top: 1rem; font-weight: bold;">Se recomienda la implementación inmediata del plan de acción urgente.</p>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem; color: var(--text-secondary); font-size: 0.875rem;">
+            <p>Reporte prototipo de usabilidad: Basado en un caso ficticio</p>
+            <p>Versión 1.0 - Noviembre 2024</p>
+        </div>
+    </div>
+</body>
+</html>

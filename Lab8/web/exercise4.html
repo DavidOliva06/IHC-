@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 4: Rediseño de Formulario - IHC</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/form-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-sitemap"></i> Ejercicio 4: Rediseño de Formulario</h1>
+            <nav>
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="exercise1.html" class="nav-link">Ejercicio 1</a>
+                <a href="exercise2.html" class="nav-link">Ejercicio 2</a>
+                <a href="exercise3.html" class="nav-link">Ejercicio 3</a>
+                <a href="exercise4.html" class="nav-link active">Ejercicio 4</a>
+                <a href="exercise5.html" class="nav-link">Ejercicio 5</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card text-center">
+            <h2>Rediseño de Formulario de Registro</h2>
+            <p>Comparación interactiva: Antes vs Después (basado en heurísticas de usabilidad)</p>
+            
+            <div class="toggle-container">
+                <button id="btnBefore" class="toggle-btn active-before" onclick="showView('before')">Antes</button>
+                <button id="btnAfter" class="toggle-btn" onclick="showView('after')">Después</button>
+            </div>
+        </div>
+
+        <!-- VISTA ANTES -->
+        <div id="viewBefore" class="form-container">
+            <h2 style="margin-bottom: 1rem;">Registro - ANTES</h2>
+            <form onsubmit="event.preventDefault(); alert('Formulario enviado (sin validación)');">
+                <div style="margin-bottom: 1rem;">
+                    <input type="text" placeholder="Email" class="form-input" style="border-color: #ccc;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <input type="password" placeholder="Password" class="form-input" style="border-color: #ccc;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <input type="password" placeholder="Confirm Password" class="form-input" style="border-color: #ccc;">
+                </div>
+                <div style="font-size: 0.75rem; color: #666; margin-bottom: 1rem;">
+                    <input type="checkbox" style="margin-right: 0.5rem;">
+                    I agree to the Terms and Conditions
+                </div>
+                <button class="btn-submit" style="background-color: #2563eb;">Register</button>
+            </form>
+
+            <div style="margin-top: 1.5rem; padding: 1rem; background-color: #fef2f2; border-left: 4px solid #ef4444; font-size: 0.875rem;">
+                <p style="font-weight: bold; color: #b91c1c; margin-bottom: 0.5rem;">❌ Problemas Identificados:</p>
+                <ul style="list-style: none; padding: 0; color: #b91c1c;">
+                    <li>• Sin validación en tiempo real</li>
+                    <li>• Sin indicador de fortaleza de contraseña</li>
+                    <li>• Contraseña no visible</li>
+                    <li>• Sin mensajes de ayuda</li>
+                    <li>• Términos no accesibles</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- VISTA DESPUÉS -->
+        <div id="viewAfter" class="form-container" style="display: none;">
+            <h2 style="margin-bottom: 0.5rem;">Registro - DESPUÉS</h2>
+            <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Completa los campos para crear tu cuenta</p>
+            
+            <form id="secureForm" onsubmit="event.preventDefault(); alert('¡Cuenta creada exitosamente!');">
+                <!-- Email -->
+                <div class="form-group">
+                    <label class="form-label">Correo Electrónico <span style="color: var(--danger-color)">*</span></label>
+                    <div style="position: relative;">
+                        <input type="email" id="email" class="form-input" placeholder="tu@email.com" oninput="validateEmail()">
+                        <i id="emailIcon" class="fas input-icon" style="display: none;"></i>
+                    </div>
+                    <div id="emailError" class="error-msg" style="display: none;"></div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label class="form-label">Contraseña <span style="color: var(--danger-color)">*</span></label>
+                    <div style="position: relative;">
+                        <input type="password" id="password" class="form-input" placeholder="Mínimo 8 caracteres" oninput="validatePassword()">
+                        <button type="button" class="password-toggle" onclick="togglePassword('password', 'toggleIcon1')">
+                            <i id="toggleIcon1" class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Strength Meter -->
+                    <div id="passwordFeedback" style="display: none;">
+                        <div class="strength-meter">
+                            <div class="strength-bar" id="bar1"></div>
+                            <div class="strength-bar" id="bar2"></div>
+                            <div class="strength-bar" id="bar3"></div>
+                            <div class="strength-bar" id="bar4"></div>
+                        </div>
+                        <p style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-secondary);">
+                            Fortaleza: <span id="strengthText" style="font-weight: 600;">Sin evaluar</span>
+                        </p>
+                        
+                        <div class="requirements-list">
+                            <div id="reqLength" class="req-item"><i class="fas fa-times"></i> Al menos 8 caracteres</div>
+                            <div id="reqCase" class="req-item"><i class="fas fa-times"></i> Mayúsculas y minúsculas</div>
+                            <div id="reqNum" class="req-item"><i class="fas fa-times"></i> Al menos un número</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label class="form-label">Confirmar Contraseña <span style="color: var(--danger-color)">*</span></label>
+                    <div style="position: relative;">
+                        <input type="password" id="confirmPassword" class="form-input" placeholder="Repite tu contraseña" oninput="validateConfirm()">
+                        <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword', 'toggleIcon2')">
+                            <i id="toggleIcon2" class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div id="confirmError" class="error-msg" style="display: none;"></div>
+                    <div id="confirmSuccess" class="success-msg" style="display: none;"><i class="fas fa-check"></i> Las contraseñas coinciden</div>
+                </div>
+
+                <!-- Terms -->
+                <div style="background-color: #f8fafc; padding: 0.75rem; border-radius: 0.375rem; margin-bottom: 1.5rem;">
+                    <label style="display: flex; align-items: flex-start; cursor: pointer; font-size: 0.875rem;">
+                        <input type="checkbox" id="terms" style="margin-top: 0.25rem; margin-right: 0.5rem;" onchange="validateForm()">
+                        <span>
+                            Acepto los <a href="#" style="color: var(--primary-color); text-decoration: underline;">Términos y Condiciones</a> y la <a href="#" style="color: var(--primary-color); text-decoration: underline;">Política de Privacidad</a>
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-submit" disabled>Crear Cuenta</button>
+                
+                <p style="text-align: center; font-size: 0.75rem; color: var(--text-secondary); margin-top: 1rem;">
+                    <i class="fas fa-lock"></i> Tu información está protegida con encriptación SSL
+                </p>
+            </form>
+
+            <div style="margin-top: 1.5rem; padding: 1rem; background-color: #f0fdf4; border-left: 4px solid #22c55e; font-size: 0.875rem;">
+                <p style="font-weight: bold; color: #15803d; margin-bottom: 0.5rem;">✅ Mejoras Implementadas:</p>
+                <ul style="list-style: none; padding: 0; color: #166534;">
+                    <li>• Validación en tiempo real</li>
+                    <li>• Indicador de fortaleza de contraseña</li>
+                    <li>• Toggle de visibilidad</li>
+                    <li>• Mensajes de ayuda contextuales</li>
+                    <li>• Enlaces a términos accesibles</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- JUSTIFICACIÓN -->
+        <div class="card" style="margin-top: 2rem;">
+            <h3>Justificación de Cambios</h3>
+            <div class="grid">
+                <div class="justification-item" style="border-color: #3b82f6;">
+                    <p><strong>Problema 1: Falta de feedback visual</strong></p>
+                    <p style="font-size: 0.875rem; color: var(--text-secondary);">Modelo: Nielsen H1 - Visibilidad del estado</p>
+                    <p style="font-size: 0.875rem;">Solución: Iconos de validación en tiempo real (✓/✗)</p>
+                </div>
+                <div class="justification-item" style="border-color: #a855f7;">
+                    <p><strong>Problema 2: Sin guía para contraseña</strong></p>
+                    <p style="font-size: 0.875rem; color: var(--text-secondary);">Modelo: Nielsen H5 - Prevención de errores</p>
+                    <p style="font-size: 0.875rem;">Solución: Indicador de fortaleza + requisitos</p>
+                </div>
+                <div class="justification-item" style="border-color: #f97316;">
+                    <p><strong>Problema 3: Contraseña oculta</strong></p>
+                    <p style="font-size: 0.875rem; color: var(--text-secondary);">Modelo: Nielsen H3 - Control y libertad</p>
+                    <p style="font-size: 0.875rem;">Solución: Toggle de visibilidad</p>
+                </div>
+                <div class="justification-item" style="border-color: #22c55e;">
+                    <p><strong>Problema 4: Errores tardíos</strong></p>
+                    <p style="font-size: 0.875rem; color: var(--text-secondary);">Modelo: Nielsen H9 - Recuperación de errores</p>
+                    <p style="font-size: 0.875rem;">Solución: Validación inmediata</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle Views
+        function showView(view) {
+            const btnBefore = document.getElementById('btnBefore');
+            const btnAfter = document.getElementById('btnAfter');
+            const viewBefore = document.getElementById('viewBefore');
+            const viewAfter = document.getElementById('viewAfter');
+
+            if (view === 'before') {
+                btnBefore.classList.add('active-before');
+                btnAfter.classList.remove('active-after');
+                viewBefore.style.display = 'block';
+                viewAfter.style.display = 'none';
+            } else {
+                btnBefore.classList.remove('active-before');
+                btnAfter.classList.add('active-after');
+                viewBefore.style.display = 'none';
+                viewAfter.style.display = 'block';
+            }
+        }
+
+        // Toggle Password Visibility
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Validation Logic
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        let isEmailValid = false;
+        let isPasswordValid = false;
+        let isConfirmValid = false;
+
+        function validateEmail() {
+            const email = document.getElementById('email').value;
+            const icon = document.getElementById('emailIcon');
+            const error = document.getElementById('emailError');
+            const input = document.getElementById('email');
+
+            icon.style.display = 'block';
+            
+            if (emailRegex.test(email)) {
+                isEmailValid = true;
+                input.classList.remove('error');
+                input.classList.add('success');
+                icon.className = 'fas fa-check input-icon';
+                icon.style.color = 'var(--success-color)';
+                error.style.display = 'none';
+            } else {
+                isEmailValid = false;
+                input.classList.remove('success');
+                input.classList.add('error');
+                icon.className = 'fas fa-times input-icon';
+                icon.style.color = 'var(--danger-color)';
+                error.style.display = 'flex';
+                error.innerHTML = '<i class="fas fa-exclamation-circle"></i> Formato de email inválido';
+            }
+            validateForm();
+        }
+
+        function validatePassword() {
+            const pwd = document.getElementById('password').value;
+            const feedback = document.getElementById('passwordFeedback');
+            
+            if (pwd.length > 0) {
+                feedback.style.display = 'block';
+            } else {
+                feedback.style.display = 'none';
+                isPasswordValid = false;
+                validateForm();
+                return;
+            }
+
+            // Requirements
+            const hasLength = pwd.length >= 8;
+            const hasCase = /[a-z]/.test(pwd) && /[A-Z]/.test(pwd);
+            const hasNum = /\d/.test(pwd);
+            const hasSpecial = /[^a-zA-Z\d]/.test(pwd);
+
+            updateRequirement('reqLength', hasLength);
+            updateRequirement('reqCase', hasCase);
+            updateRequirement('reqNum', hasNum);
+
+            // Strength Calculation
+            let strength = 0;
+            if (hasLength) strength++;
+            if (hasCase) strength++;
+            if (hasNum) strength++;
+            if (hasSpecial) strength++;
+
+            updateStrengthMeter(strength);
+
+            isPasswordValid = hasLength && hasCase && hasNum;
+            validateConfirm(); // Re-validate confirm in case password changed
+            validateForm();
+        }
+
+        function updateRequirement(id, met) {
+            const el = document.getElementById(id);
+            const icon = el.querySelector('i');
+            if (met) {
+                el.classList.add('met');
+                icon.className = 'fas fa-check';
+            } else {
+                el.classList.remove('met');
+                icon.className = 'fas fa-times';
+            }
+        }
+
+        function updateStrengthMeter(strength) {
+            const bars = [
+                document.getElementById('bar1'),
+                document.getElementById('bar2'),
+                document.getElementById('bar3'),
+                document.getElementById('bar4')
+            ];
+            const text = document.getElementById('strengthText');
+            
+            // Reset
+            bars.forEach(bar => bar.style.backgroundColor = '#e2e8f0');
+
+            let color = '#e2e8f0';
+            let label = 'Sin evaluar';
+
+            if (strength >= 1) {
+                color = '#ef4444'; // Red
+                label = 'Débil';
+                bars[0].style.backgroundColor = color;
+            }
+            if (strength >= 2) {
+                color = '#f97316'; // Orange
+                label = 'Regular';
+                bars[1].style.backgroundColor = color;
+                bars[0].style.backgroundColor = color;
+            }
+            if (strength >= 3) {
+                color = '#eab308'; // Yellow
+                label = 'Buena';
+                bars[2].style.backgroundColor = color;
+                bars[1].style.backgroundColor = color;
+                bars[0].style.backgroundColor = color;
+            }
+            if (strength >= 4) {
+                color = '#22c55e'; // Green
+                label = 'Fuerte';
+                bars.forEach(bar => bar.style.backgroundColor = color);
+            }
+
+            text.textContent = label;
+            text.style.color = strength > 0 ? color : 'var(--text-secondary)';
+        }
+
+        function validateConfirm() {
+            const pwd = document.getElementById('password').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            const error = document.getElementById('confirmError');
+            const success = document.getElementById('confirmSuccess');
+            const input = document.getElementById('confirmPassword');
+
+            if (!confirm) {
+                error.style.display = 'none';
+                success.style.display = 'none';
+                input.classList.remove('error', 'success');
+                isConfirmValid = false;
+                validateForm();
+                return;
+            }
+
+            if (pwd === confirm) {
+                isConfirmValid = true;
+                input.classList.remove('error');
+                input.classList.add('success');
+                error.style.display = 'none';
+                success.style.display = 'flex';
+            } else {
+                isConfirmValid = false;
+                input.classList.remove('success');
+                input.classList.add('error');
+                error.style.display = 'flex';
+                error.innerHTML = '<i class="fas fa-exclamation-circle"></i> Las contraseñas no coinciden';
+                success.style.display = 'none';
+            }
+            validateForm();
+        }
+
+        function validateForm() {
+            const terms = document.getElementById('terms').checked;
+            const btn = document.getElementById('submitBtn');
+
+            if (isEmailValid && isPasswordValid && isConfirmValid && terms) {
+                btn.disabled = false;
+            } else {
+                btn.disabled = true;
+            }
+        }
+    </script>
+</body>
+</html>
