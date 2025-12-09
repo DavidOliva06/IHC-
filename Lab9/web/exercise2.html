@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 2: Patrones de Formularios - IHC</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Estilos específicos para el Wizard */
+        .wizard-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .wizard-header {
+            background: linear-gradient(135deg, #2563eb 0%, #4338ca 100%);
+            padding: 24px;
+            color: white;
+        }
+
+        .wizard-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .stepper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .step-circle.active {
+            background: white;
+            color: #2563eb;
+        }
+
+        .step-circle.completed {
+            background: #4ade80;
+            color: white;
+        }
+
+        .step-line {
+            height: 4px;
+            width: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .step-line.completed {
+            background: #4ade80;
+        }
+
+        .wizard-body {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-input.valid {
+            border-color: #22c55e;
+        }
+
+        .form-input.invalid {
+            border-color: #ef4444;
+        }
+
+        .validation-icon {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            font-size: 18px;
+        }
+
+        .text-success { color: #22c55e; }
+        .text-error { color: #ef4444; }
+
+        .btn-wizard {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #2563eb 0%, #4338ca 100%);
+            color: white;
+        }
+
+        .btn-wizard:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        .btn-wizard:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        /* Password Strength */
+        .strength-meter {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            flex: 1;
+            background: #e5e7eb;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .password-requirements {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .requirement-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 2px;
+        }
+
+        .requirement-item.met {
+            color: #22c55e;
+        }
+
+        .step-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-clipboard-list"></i> Ejercicio 2: Patrones de Formularios</h1>
+            <nav>
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="exercise1.html" class="nav-link">Ejercicio 1</a>
+                <a href="exercise2.html" class="nav-link active">Ejercicio 2</a>
+                <a href="exercise3.html" class="nav-link">Ejercicio 3</a>
+                <a href="exercise4.html" class="nav-link">Ejercicio 4</a>
+                <a href="exercise5.html" class="nav-link">Ejercicio 5</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Patrones de Diseño en Formularios Bancarios</h2>
+            <p><strong>Caso de Estudio:</strong> Wizard de Registro de Usuario</p>
+            <p>Este ejercicio implementa un formulario de registro por pasos (Wizard) que utiliza múltiples patrones de diseño para mejorar la experiencia de usuario, reducir la carga cognitiva y prevenir errores.</p>
+        </div>
+
+        <div class="card">
+            <h3>Patrones Implementados</h3>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patrón</th>
+                            <th>Justificación</th>
+                            <th>Ubicación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Wizard/Multi-step Form</strong></td>
+                            <td>Reduce la carga cognitiva dividiendo un formulario largo en secciones manejables. Mejora la tasa de finalización.</td>
+                            <td>Estructura General</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Progress Indicator (Stepper)</strong></td>
+                            <td>Muestra al usuario cuántos pasos quedan, reduce ansiedad y abandono. Es crítico en procesos largos.</td>
+                            <td>Header del Formulario</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Inline Validation</strong></td>
+                            <td>Feedback inmediato previene errores y frustraciones. En banca móvil es esencial para datos críticos.</td>
+                            <td>Todos los campos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Password Strength Meter</strong></td>
+                            <td>Guía al usuario a crear contraseñas seguras sin depender solo de mensajes de error.</td>
+                            <td>Paso 3</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Input Masks</strong></td>
+                            <td>Formatea automáticamente datos (teléfono, RUT) para reducir errores y mejorar legibilidad.</td>
+                            <td>Pasos 1 y 2</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Contextual Help</strong></td>
+                            <td>Explica requisitos complejos (formato de contraseña) sin saturar la interfaz.</td>
+                            <td>Paso 3</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Primary CTA Button</strong></td>
+                            <td>Botón destacado que guía el flujo. Se deshabilita hasta que la validación sea exitosa.</td>
+                            <td>Pie del Formulario</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Demo Interactiva -->
+        <div class="wizard-container">
+            <!-- Header -->
+            <div class="wizard-header">
+                <div class="wizard-nav">
+                    <button id="btn-back" class="btn-icon" style="background:none; border:none; color:white; cursor:pointer; visibility: hidden;">
+                        <i class="fas fa-chevron-left fa-lg"></i>
+                    </button>
+                    <h2 style="margin:0; font-size: 1.2rem;">Registro de Usuario</h2>
+                    <div style="width: 24px;"></div>
+                </div>
+
+                <!-- Stepper -->
+                <div class="stepper">
+                    <div class="step-circle active" id="step-circle-1">1</div>
+                    <div class="step-line" id="step-line-1"></div>
+                    <div class="step-circle" id="step-circle-2">2</div>
+                    <div class="step-line" id="step-line-2"></div>
+                    <div class="step-circle" id="step-circle-3">3</div>
+                </div>
+                <p class="text-center" style="margin-top: 10px; font-size: 0.9rem; opacity: 0.9;">
+                    <span id="step-label">Paso 1: Datos Personales</span>
+                </p>
+            </div>
+
+            <!-- Body -->
+            <div class="wizard-body">
+                <form id="registration-form" onsubmit="return false;">
+                    
+                    <!-- Paso 1 -->
+                    <div id="step-1" class="step-content active">
+                        <div class="form-group">
+                            <label class="form-label">Nombres *</label>
+                            <input type="text" class="form-input" id="firstName" placeholder="Ingresa tus nombres">
+                            <i class="validation-icon fas" id="icon-firstName"></i>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Apellidos *</label>
+                            <input type="text" class="form-input" id="lastName" placeholder="Ingresa tus apellidos">
+                            <i class="validation-icon fas" id="icon-lastName"></i>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">RUT *</label>
+                            <input type="text" class="form-input" id="rut" placeholder="12.345.678-9" maxlength="12">
+                            <i class="validation-icon fas" id="icon-rut"></i>
+                            <small style="color: #6b7280; font-size: 12px;">Formato automático: 12.345.678-9</small>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fecha de Nacimiento *</label>
+                            <input type="date" class="form-input" id="birthDate">
+                        </div>
+                    </div>
+
+                    <!-- Paso 2 -->
+                    <div id="step-2" class="step-content">
+                        <div class="form-group">
+                            <label class="form-label">Correo Electrónico *</label>
+                            <input type="email" class="form-input" id="email" placeholder="correo@ejemplo.com">
+                            <i class="validation-icon fas" id="icon-email"></i>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Teléfono *</label>
+                            <input type="tel" class="form-input" id="phone" placeholder="987 654 321" maxlength="16">
+                            <i class="validation-icon fas" id="icon-phone"></i>
+                            <small style="color: #6b7280; font-size: 12px;">Formato: +51 9XX XXX XXX</small>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Dirección *</label>
+                            <input type="text" class="form-input" id="address" placeholder="Calle, número, comuna">
+                        </div>
+                    </div>
+
+                    <!-- Paso 3 -->
+                    <div id="step-3" class="step-content">
+                        <div class="form-group">
+                            <label class="form-label">Nombre de Usuario *</label>
+                            <input type="text" class="form-input" id="username" placeholder="Mínimo 4 caracteres">
+                            <i class="validation-icon fas" id="icon-username"></i>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contraseña *</label>
+                            <div style="position: relative;">
+                                <input type="password" class="form-input" id="password" placeholder="Mínimo 8 caracteres" style="padding-right: 40px;">
+                                <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Medidor de Fortaleza -->
+                            <div class="strength-meter">
+                                <div class="strength-bar" id="bar-1"></div>
+                                <div class="strength-bar" id="bar-2"></div>
+                                <div class="strength-bar" id="bar-3"></div>
+                                <div class="strength-bar" id="bar-4"></div>
+                            </div>
+                            <p id="strength-text" style="font-size: 12px; margin-top: 4px; font-weight: 600; color: #ef4444;">Muy débil</p>
+
+                            <div class="password-requirements">
+                                <div class="requirement-item" id="req-length"><i class="fas fa-circle" style="font-size: 6px;"></i> Mínimo 8 caracteres</div>
+                                <div class="requirement-item" id="req-upper"><i class="fas fa-circle" style="font-size: 6px;"></i> Una mayúscula</div>
+                                <div class="requirement-item" id="req-number"><i class="fas fa-circle" style="font-size: 6px;"></i> Un número</div>
+                                <div class="requirement-item" id="req-special"><i class="fas fa-circle" style="font-size: 6px;"></i> Un carácter especial</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirmar Contraseña *</label>
+                            <div style="position: relative;">
+                                <input type="password" class="form-input" id="confirmPassword" placeholder="Repite tu contraseña" style="padding-right: 40px;">
+                                <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <i class="validation-icon fas" id="icon-confirmPassword" style="top: 12px; right: 40px;"></i>
+                            <p id="match-error" style="color: #ef4444; font-size: 12px; display: none; margin-top: 4px;">Las contraseñas no coinciden</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <button id="btn-next" class="btn-wizard" disabled>Continuar</button>
+                        <p id="terms-text" class="text-center" style="font-size: 12px; color: #6b7280; margin-top: 10px;">
+                            Al continuar, aceptas nuestros Términos y Condiciones
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estado del formulario
+        let currentStep = 1;
+        const formData = {
+            firstName: '', lastName: '', rut: '', birthDate: '',
+            email: '', phone: '', address: '',
+            username: '', password: '', confirmPassword: ''
+        };
+        const validation = {
+            firstName: false, lastName: false, rut: false, birthDate: false,
+            email: false, phone: false, address: false,
+            username: false, password: false, confirmPassword: false
+        };
+
+        // Elementos DOM
+        const btnNext = document.getElementById('btn-next');
+        const btnBack = document.getElementById('btn-back');
+        const stepLabel = document.getElementById('step-label');
+        const termsText = document.getElementById('terms-text');
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            setupEventListeners();
+            updateUI();
+        });
+
+        function setupEventListeners() {
+            // Inputs Paso 1
+            setupInput('firstName', validateName);
+            setupInput('lastName', validateName);
+            setupInput('rut', validateRUT, formatRUT);
+            setupInput('birthDate', (val) => val !== '');
+
+            // Inputs Paso 2
+            setupInput('email', validateEmail);
+            setupInput('phone', validatePhone, formatPhone);
+            setupInput('address', (val) => val.length > 5);
+
+            // Inputs Paso 3
+            setupInput('username', (val) => val.length >= 4);
+            setupInput('password', validatePassword);
+            setupInput('confirmPassword', validateConfirmPassword);
+
+            // Botones
+            btnNext.addEventListener('click', handleNext);
+            btnBack.addEventListener('click', handleBack);
+        }
+
+        function setupInput(id, validator, formatter) {
+            const input = document.getElementById(id);
+            input.addEventListener('input', (e) => {
+                let value = e.target.value;
+                
+                // Aplicar formato si existe
+                if (formatter) {
+                    value = formatter(value);
+                    e.target.value = value;
+                }
+
+                formData[id] = value;
+                
+                // Validar
+                const isValid = validator(value);
+                validation[id] = isValid;
+                
+                // Actualizar UI del campo
+                updateFieldUI(id, isValid);
+                
+                // Validar paso completo
+                validateStep();
+
+                // Lógica especial para password
+                if (id === 'password') updatePasswordStrength(value);
+                if (id === 'password' || id === 'confirmPassword') {
+                    // Revalidar confirmación si cambia el password
+                    if (id === 'password' && formData.confirmPassword) {
+                        const confirmValid = formData.confirmPassword === value;
+                        validation.confirmPassword = confirmValid;
+                        updateFieldUI('confirmPassword', confirmValid);
+                    }
+                }
+            });
+        }
+
+        // Funciones de Formato
+        function formatRUT(value) {
+            const clean = value.replace(/[^0-9kK]/g, '');
+            if (clean.length <= 1) return clean;
+            const body = clean.slice(0, -1);
+            const dv = clean.slice(-1);
+            return body.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + '-' + dv;
+        }
+
+        function formatPhone(value) {
+            let clean = value.replace(/\D/g, '');
+            if (clean.startsWith('51')) clean = clean.substring(2);
+            clean = clean.substring(0, 9);
+            
+            if (clean.length === 0) return '';
+            
+            let formatted = '+51';
+            if (clean.length > 0) formatted += ' ' + clean.substring(0, 3);
+            if (clean.length >= 4) formatted += ' ' + clean.substring(3, 6);
+            if (clean.length >= 7) formatted += ' ' + clean.substring(6, 9);
+            
+            return formatted;
+        }
+
+        // Funciones de Validación
+        function validateName(val) { return val.length >= 2; }
+        function validateRUT(val) { return val.length >= 11; } // Simplificado
+        function validateEmail(val) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val); }
+        function validatePhone(val) { 
+            const clean = val.replace(/\D/g, '');
+            return clean.length === 11 && clean.startsWith('519');
+        }
+        function validatePassword(val) { return val.length >= 8; }
+        function validateConfirmPassword(val) { return val === formData.password && val.length > 0; }
+
+        function updateFieldUI(id, isValid) {
+            const input = document.getElementById(id);
+            const icon = document.getElementById(`icon-${id}`);
+            
+            if (input.value === '') {
+                input.classList.remove('valid', 'invalid');
+                if(icon) icon.className = 'validation-icon fas';
+                return;
+            }
+
+            if (isValid) {
+                input.classList.add('valid');
+                input.classList.remove('invalid');
+                if(icon) {
+                    icon.className = 'validation-icon fas fa-check-circle text-success';
+                }
+            } else {
+                input.classList.add('invalid');
+                input.classList.remove('valid');
+                if(icon) {
+                    icon.className = 'validation-icon fas fa-exclamation-circle text-error';
+                }
+            }
+
+            if (id === 'confirmPassword') {
+                const errorMsg = document.getElementById('match-error');
+                errorMsg.style.display = isValid ? 'none' : 'block';
+            }
+        }
+
+        function updatePasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+            // Actualizar barras
+            const bars = [1, 2, 3, 4];
+            const colors = ['#ef4444', '#f59e0b', '#eab308', '#22c55e'];
+            const labels = ['Muy débil', 'Débil', 'Aceptable', 'Fuerte', 'Muy fuerte'];
+            
+            bars.forEach((i) => {
+                const bar = document.getElementById(`bar-${i}`);
+                if (i <= strength) {
+                    bar.style.backgroundColor = colors[strength - 1] || colors[0];
+                } else {
+                    bar.style.backgroundColor = '#e5e7eb';
+                }
+            });
+
+            document.getElementById('strength-text').textContent = labels[strength] || 'Muy débil';
+            document.getElementById('strength-text').style.color = colors[strength - 1] || colors[0];
+
+            // Actualizar lista de requisitos
+            updateRequirement('req-length', password.length >= 8);
+            updateRequirement('req-upper', /[A-Z]/.test(password));
+            updateRequirement('req-number', /[0-9]/.test(password));
+            updateRequirement('req-special', /[^A-Za-z0-9]/.test(password));
+        }
+
+        function updateRequirement(id, met) {
+            const el = document.getElementById(id);
+            if (met) {
+                el.classList.add('met');
+                el.querySelector('i').className = 'fas fa-check-circle';
+            } else {
+                el.classList.remove('met');
+                el.querySelector('i').className = 'fas fa-circle';
+            }
+        }
+
+        function validateStep() {
+            let isValid = false;
+            if (currentStep === 1) {
+                isValid = validation.firstName && validation.lastName && validation.rut && validation.birthDate;
+            } else if (currentStep === 2) {
+                isValid = validation.email && validation.phone && validation.address;
+            } else if (currentStep === 3) {
+                isValid = validation.username && validation.password && validation.confirmPassword;
+            }
+            btnNext.disabled = !isValid;
+        }
+
+        function handleNext() {
+            if (currentStep < 3) {
+                currentStep++;
+                updateUI();
+            } else {
+                alert('¡Registro completado exitosamente!');
+            }
+        }
+
+        function handleBack() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            // Mostrar/Ocultar pasos
+            document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+
+            // Actualizar Stepper
+            for (let i = 1; i <= 3; i++) {
+                const circle = document.getElementById(`step-circle-${i}`);
+                const line = document.getElementById(`step-line-${i}`);
+                
+                if (i < currentStep) {
+                    circle.className = 'step-circle completed';
+                    circle.innerHTML = '<i class="fas fa-check"></i>';
+                    if (line) line.classList.add('completed');
+                } else if (i === currentStep) {
+                    circle.className = 'step-circle active';
+                    circle.innerHTML = i;
+                    if (line) line.classList.remove('completed');
+                } else {
+                    circle.className = 'step-circle';
+                    circle.innerHTML = i;
+                    if (line) line.classList.remove('completed');
+                }
+            }
+
+            // Actualizar Textos y Botones
+            const titles = ['Datos Personales', 'Datos de Contacto', 'Credenciales de Acceso'];
+            stepLabel.textContent = `Paso ${currentStep}: ${titles[currentStep - 1]}`;
+            
+            btnBack.style.visibility = currentStep > 1 ? 'visible' : 'hidden';
+            btnNext.textContent = currentStep === 3 ? 'Finalizar Registro' : 'Continuar';
+            termsText.style.display = currentStep === 1 ? 'block' : 'none';
+
+            validateStep();
+        }
+
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            const btn = input.nextElementSibling;
+            const icon = btn.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+    </script>
+</body>
+</html>

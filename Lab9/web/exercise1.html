@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 1: Análisis de Patrones en Instagram - IHC</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .pattern-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #E1306C;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .pattern-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .pattern-number {
+            background: #E1306C;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .pattern-type {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .type-navigation {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+        .type-content {
+            background: #F3E5F5;
+            color: #7B1FA2;
+        }
+        .type-gesture {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+        .type-input {
+            background: #E8F5E9;
+            color: #388E3C;
+        }
+        .risk-high {
+            color: #D32F2F;
+            font-weight: bold;
+        }
+        .risk-medium {
+            color: #F57C00;
+            font-weight: bold;
+        }
+        .risk-low {
+            color: #388E3C;
+            font-weight: bold;
+        }
+        .screenshot-placeholder {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            margin: 20px 0;
+        }
+        .screenshot-placeholder i {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .instagram-mockup {
+            background: #FAFAFA;
+            border: 2px solid #DBDBDB;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .nav-bar-demo {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: white;
+            border-top: 1px solid #DBDBDB;
+            padding: 12px 0;
+            border-radius: 8px;
+        }
+        .nav-bar-demo i {
+            font-size: 24px;
+            color: #262626;
+        }
+        .nav-bar-demo i.active {
+            color: #E1306C;
+        }
+        .stories-demo {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 15px 0;
+            background: white;
+        }
+        .story-circle {
+            min-width: 70px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px;
+        }
+        .story-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #FAFAFA;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #8E8E8E;
+        }
+        .pull-refresh-demo {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        .refresh-icon {
+            font-size: 32px;
+            color: #E1306C;
+            animation: rotate 1s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fab fa-instagram"></i> Ejercicio 1: Análisis de Patrones en Instagram</h1>
+            <nav>
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="exercise1.html" class="nav-link active">Ejercicio 1</a>
+                <a href="exercise2.html" class="nav-link">Ejercicio 2</a>
+                <a href="exercise3.html" class="nav-link">Ejercicio 3</a>
+                <a href="exercise4.html" class="nav-link">Ejercicio 4</a>
+                <a href="exercise5.html" class="nav-link">Ejercicio 5</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Análisis de Patrones de Diseño en Instagram</h2>
+            <p><strong>Plataforma analizada:</strong> Instagram (iOS/Android)</p>
+            <p>Este ejercicio identifica y evalúa 7 patrones de diseño fundamentales utilizados en Instagram, analizando su justificación de uso y los riesgos potenciales de usabilidad.</p>
+        </div>
+
+        <!-- Tabla Resumen -->
+        <div class="card">
+            <h3>Tabla de Análisis de Patrones de Diseño</h3>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Patrón Identificado</th>
+                            <th>Tipo</th>
+                            <th>Ubicación</th>
+                            <th>Justificación de Uso</th>
+                            <th>Riesgo de Usabilidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1</strong></td>
+                            <td><strong>Bottom Navigation Bar</strong></td>
+                            <td><span class="badge" style="background: #E3F2FD; color: #1976D2;">Navegación</span></td>
+                            <td>Barra inferior fija</td>
+                            <td>Acceso rápido a las 5 secciones principales. Es el estándar para apps de contenido social porque permite navegación con una sola mano.</td>
+                            <td>Si se implementa con más de 5 ítems, genera sobrecarga cognitiva y dificulta la precisión táctil.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2</strong></td>
+                            <td><strong>Infinite Scroll</strong></td>
+                            <td><span class="badge" style="background: #F3E5F5; color: #7B1FA2;">Contenido</span></td>
+                            <td>Feed principal</td>
+                            <td>Mantiene al usuario enganchado al eliminar puntos de fricción. Maximiza el tiempo de permanencia mostrando contenido continuo.</td>
+                            <td>Puede causar desorientación espacial, dificulta volver a contenido anterior y genera "doomscrolling".</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3</strong></td>
+                            <td><strong>Pull-to-Refresh</strong></td>
+                            <td><span class="badge" style="background: #FFF3E0; color: #F57C00;">Gesto/Feedback</span></td>
+                            <td>Todas las secciones con feeds</td>
+                            <td>Patrón intuitivo introducido por Twitter. Permite actualizar contenido de forma natural.</td>
+                            <td>Si el indicador de carga no es claro o el refresh es muy lento, genera frustración. Puede activarse accidentalmente.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4</strong></td>
+                            <td><strong>Stories Carousel</strong></td>
+                            <td><span class="badge" style="background: #F3E5F5; color: #7B1FA2;">Contenido</span></td>
+                            <td>Parte superior del feed</td>
+                            <td>Presenta contenido efímero de forma destacada. El formato circular con borde de color indica contenido no visto, aprovechando el FOMO.</td>
+                            <td>Si los indicadores de "visto/no visto" no son claros, los usuarios pueden perder contenido nuevo o revisar repetidamente el mismo.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>5</strong></td>
+                            <td><strong>Double-tap to Like</strong></td>
+                            <td><span class="badge" style="background: #FFF3E0; color: #F57C00;">Gesto/Feedback</span></td>
+                            <td>Publicaciones en feed</td>
+                            <td>Reduce fricción para la interacción más común. El gesto es natural y la animación de corazón proporciona feedback inmediato satisfactorio.</td>
+                            <td>Sin feedback visual claro, los usuarios pueden pensar que el gesto no funcionó y repetirlo (causando unlike accidental).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>6</strong></td>
+                            <td><strong>Swipe Navigation</strong></td>
+                            <td><span class="badge" style="background: #FFF3E0; color: #F57C00;">Gesto</span></td>
+                            <td>Historias/Reels</td>
+                            <td>Permite navegación fluida entre contenido secuencial. Es intuitivo porque imita el gesto de "pasar página".</td>
+                            <td>Si no hay indicadores visuales de que existe más contenido o la sensibilidad es incorrecta, puede causar navegación accidental.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>7</strong></td>
+                            <td><strong>FAB (Floating Action Button)</strong></td>
+                            <td><span class="badge" style="background: #E8F5E9; color: #388E3C;">Entrada de datos</span></td>
+                            <td>Botón "+" central</td>
+                            <td>Destaca la acción principal (crear contenido) colocándola en posición ergonómica central. Es el CTA más importante de la app.</td>
+                            <td>Si se coloca mal o en pantallas donde no es relevante, obstruye contenido importante o confunde sobre su función contextual.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Análisis Detallado por Patrón -->
+        <h2 style="margin-top: 40px;">Análisis Detallado por Patrón</h2>
+
+        <!-- Patrón 1: Bottom Navigation Bar -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div class="pattern-number">1</div>
+                    <div>
+                        <h3 style="margin: 0;">Bottom Navigation Bar</h3>
+                        <span class="pattern-type type-navigation">Navegación</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                <div>
+                    <h4><i class="fas fa-map-marker-alt"></i> Ubicación</h4>
+                    <p>Barra inferior fija con 5 iconos principales</p>
+                    
+                    <h4><i class="fas fa-check-circle"></i> Justificación de Uso</h4>
+                    <p>Acceso rápido a las 5 secciones principales (Home, Búsqueda, Reels, Tienda, Perfil). Es el estándar para apps de contenido social porque permite navegación con una sola mano en dispositivos móviles.</p>
+                    
+                    <h4><i class="fas fa-exclamation-triangle"></i> Riesgo de Usabilidad</h4>
+                    <p class="risk-medium">Si se implementa con más de 5 ítems, genera sobrecarga cognitiva y dificulta la precisión táctil.</p>
+                </div>
+                <div>
+                    <div class="instagram-mockup">
+                        <h4 style="text-align: center; margin-top: 0;">Demo: Barra de Navegación</h4>
+                        <div class="nav-bar-demo">
+                            <i class="fas fa-home active"></i>
+                            <i class="fas fa-search"></i>
+                            <i class="fas fa-plus-square"></i>
+                            <i class="fas fa-heart"></i>
+                            <i class="far fa-user-circle"></i>
+                        </div>
+                        <p style="text-align: center; font-size: 12px; color: #8E8E8E; margin-top: 10px;">
+                            Estado activo con color distintivo
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patrón 2: Infinite Scroll -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div class="pattern-number">2</div>
+                    <div>
+                        <h3 style="margin: 0;">Infinite Scroll</h3>
+                        <span class="pattern-type type-content">Contenido</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid" style="grid-template-columns: 2fr 1fr;">
+                <div>
+                    <h4><i class="fas fa-map-marker-alt"></i> Ubicación</h4>
+                    <p>Feed principal y secciones de contenido</p>
+                    
+                    <h4><i class="fas fa-check-circle"></i> Justificación de Uso</h4>
+                    <p>Mantiene al usuario enganchado al eliminar puntos de fricción. Maximiza el tiempo de permanencia mostrando contenido continuo sin necesidad de clicks adicionales. Reduce la carga cognitiva al eliminar la paginación.</p>
+                    
+                    <h4><i class="fas fa-exclamation-triangle"></i> Riesgo de Usabilidad</h4>
+                    <p class="risk-high">Puede causar desorientación espacial (el usuario pierde noción de dónde está), dificulta volver a contenido anterior y genera "doomscrolling" (desplazamiento compulsivo sin propósito).</p>
+                </div>
+                <div>
+                    <div class="screenshot-placeholder" style="background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);">
+                        <i class="fas fa-infinity"></i>
+                        <p style="margin: 10px 0 0 0; font-size: 14px;">Feed vertical continuo<br>Sin botón "cargar más"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patrón 3: Pull-to-Refresh -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div class="pattern-number">3</div>
+                    <div>
+                        <h3 style="margin: 0;">Pull-to-Refresh</h3>
+                        <span class="pattern-type type-gesture">Gesto/Feedback</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                <div>
+                    <h4><i class="fas fa-map-marker-alt"></i> Ubicación</h4>
+                    <p>Todas las secciones con feeds (Home, Explorar, Perfil)</p>
+                    
+                    <h4><i class="fas fa-check-circle"></i> Justificación de Uso</h4>
+                    <p>Patrón intuitivo introducido por Twitter, permite actualizar contenido de forma natural. Los usuarios lo esperan en apps sociales. Proporciona sensación de control sobre el contenido.</p>
+                    
+                    <h4><i class="fas fa-exclamation-triangle"></i> Riesgo de Usabilidad</h4>
+                    <p class="risk-medium">Si el indicador de carga no es claro o el refresh es muy lento, genera frustración. También puede activarse accidentalmente durante el scroll.</p>
+                </div>
+                <div>
+                    <div class="instagram-mockup">
+                        <div class="pull-refresh-demo">
+                            <i class="fas fa-sync-alt refresh-icon"></i>
+                            <p style="margin-top: 15px; font-size: 14px; color: #8E8E8E;">
+                                Arrastra hacia abajo para actualizar
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patrón 4: Stories Carousel -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div class="pattern-number">4</div>
+                    <div>
+                        <h3 style="margin: 0;">Stories Carousel</h3>
+                        <span class="pattern-type type-content">Contenido</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h4><i class="fas fa-map-marker-alt"></i> Ubicación</h4>
+                <p>Parte superior del feed, scroll horizontal</p>
+                
+                <h4><i class="fas fa-check-circle"></i> Justificación de Uso</h4>
+                <p>Presenta contenido efímero de forma destacada. El formato circular con borde de color indica contenido no visto, aprovechando el FOMO (fear of missing out). Maximiza el engagement con contenido temporal.</p>
+                
+                <h4><i class="fas fa-exclamation-triangle"></i> Riesgo de Usabilidad</h4>
+                <p class="risk-medium">Si los indicadores de "visto/no visto" no son claros, los usuarios pueden perder contenido nuevo o revisar repetidamente el mismo contenido.</p>
+
+                <div class="instagram-mockup" style="margin-top: 20px;">
+                    <h4 style="text-align: center; margin-top: 0;">Demo: Carrusel de Historias</h4>
+                    <div class="stories-demo">
+                        <div>
+                            <div class="story-circle">
+                                <div class="story-inner">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                            </div>
+                            <p style="text-align: center; font-size: 11px; margin: 5px 0 0 0;">Tu historia</p>
+                        </div>
+                        <div>
+                            <div class="story-circle">
+                                <div class="story-inner">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                            <p style="text-align: center; font-size: 11px; margin: 5px 0 0 0;">Usuario 1</p>
+                        </div>
+                        <div>
+                            <div class="story-circle">
+                                <div class="story-inner">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                            <p style="text-align: center; font-size: 11px; margin: 5px 0 0 0;">Usuario 2</p>
+                        </div>
+                        <div>
+                            <div class="story-circle">
+                                <div class="story-inner">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                            <p style="text-align: center; font-size: 11px; margin: 5px 0 0 0;">Usuario 3</p>
+                        </div>
+                        <div>
+                            <div class="story-circle">
+                                <div class="story-inner">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                            <p style="text-align: center; font-size: 11px; margin: 5px 0 0 0;">Usuario 4</p>
+                        </div>
+                    </div>
+                    <p style="text-align: center; font-size: 12px; color: #8E8E8E; margin-top: 10px;">
+                        Borde gradiente para historias no vistas
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patrón 5: Double-tap to Like -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div class="pattern-number">5</div>
+                    <div>
+                        <h3 style="margin: 0;">Double-tap to Like</h3>
+                        <span class="pattern-type type-gesture">Gesto/Feedback</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid" style="grid-template-columns: 2fr 1fr;">
+                <div>
+                    <h4><i class="fas fa-map-marker-alt"></i> Ubicación</h4>
+                    <p>Publicaciones en feed, Reels e Historias</p>
+                    
+                    <h4><i class="fas fa-check-circle"></i> Justificación de Uso</h4>
+                    <p>Reduce fricción para la interacción más común. El gesto es natural y la animación de corazón proporciona feedback inmediato satisfactorio. Aumenta significativamente el engagement comparado con solo tener el botón de like.</p>
+                    
+                    <h4><i class="fas fa-exclamation-triangle"></i> Riesgo de Usabilidad</h4>
+                    <p class="risk-medium">Sin feedback visual claro, los usuarios pueden pensar que el gesto no funcionó y repetirlo (causando unlike accidental). También puede ocurrir con gestos no intencionales al hacer zoom.</p>
+                </div>
+                <div>
+                    <div class="screenshot-placeholder" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="fas fa-heart" style="font-size: 64px;"></i>
+                        <p style="margin: 15px 0 0 0; font-size: 14px;">Doble toque<br>Feedback instantáneo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patrón 6: Swipe Navigation -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div class="pattern-number">6</div>
+                    <div>
+                        <h3 style="margin: 0;">Swipe Navigation</h3>
+                        <span class="pattern-type type-gesture">Gesto</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h4><i class="fas fa-map-marker-alt"></i> Ubicación</h4>
+                <p>Historias, Reels, mensajes directos</p>
+                
+                <h4><i class="fas fa-check-circle"></i> Justificación de Uso</h4>
+                <p>Permite navegación fluida entre contenido secuencial. Es intuitivo porque imita el gesto de "pasar página". Mantiene al usuario en un flujo de consumo de contenido sin interrupciones.</p>
+                
+                <h4><i class="fas fa-exclamation-triangle"></i> Riesgo de Usabilidad</h4>
+                <p class="risk-medium">Si no hay indicadores visuales de que existe más contenido o la sensibilidad es incorrecta, puede causar navegación accidental o que el usuario no descubra contenido adicional.</p>
+
+                <div class="instagram-mockup" style="margin-top: 20px; text-align: center;">
+                    <i class="fas fa-chevron-left" style="font-size: 32px; color: #8E8E8E; margin: 20px;"></i>
+                    <i class="fas fa-mobile-alt" style="font-size: 48px; color: #E1306C;"></i>
+                    <i class="fas fa-chevron-right" style="font-size: 32px; color: #8E8E8E; margin: 20px;"></i>
+                    <p style="font-size: 12px; color: #8E8E8E; margin-top: 15px;">
+                        Deslizar izquierda/derecha para navegar entre historias
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patrón 7: FAB -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div class="pattern-number">7</div>
+                    <div>
+                        <h3 style="margin: 0;">FAB (Floating Action Button)</h3>
+                        <span class="pattern-type type-input">Entrada de datos</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid" style="grid-template-columns: 2fr 1fr;">
+                <div>
+                    <h4><i class="fas fa-map-marker-alt"></i> Ubicación</h4>
+                    <p>Botón "+" central en la barra de navegación inferior</p>
+                    
+                    <h4><i class="fas fa-check-circle"></i> Justificación de Uso</h4>
+                    <p>Destaca la acción principal (crear contenido) colocándola en posición ergonómica central. Es el CTA más importante de la app porque Instagram depende del contenido generado por usuarios. Fácilmente accesible con el pulgar.</p>
+                    
+                    <h4><i class="fas fa-exclamation-triangle"></i> Riesgo de Usabilidad</h4>
+                    <p class="risk-low">Si se coloca mal o en pantallas donde no es relevante, obstruye contenido importante o confunde sobre su función contextual. Puede ser pulsado accidentalmente durante la navegación.</p>
+                </div>
+                <div>
+                    <div class="screenshot-placeholder" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <i class="fas fa-plus-circle" style="font-size: 64px;"></i>
+                        <p style="margin: 15px 0 0 0; font-size: 14px;">Crear contenido<br>Posición central</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conclusiones -->
+        <div class="card" style="margin-top: 40px;">
+            <h3><i class="fas fa-lightbulb"></i> Conclusiones del Análisis</h3>
+            
+            <h4>Fortalezas de los Patrones Implementados</h4>
+            <ul>
+                <li><strong>Estándares de la industria:</strong> Instagram implementa patrones ampliamente reconocidos y esperados por los usuarios de redes sociales.</li>
+                <li><strong>Optimización para engagement:</strong> Patrones como Infinite Scroll y Double-tap to Like maximizan la interacción del usuario.</li>
+                <li><strong>Navegación fluida:</strong> La combinación de gestos táctiles y navegación por pestañas proporciona una experiencia natural.</li>
+                <li><strong>Feedback visual efectivo:</strong> Animaciones y estados visuales claros refuerzan las acciones del usuario.</li>
+            </ul>
+
+            <h4>Riesgos Principales Identificados</h4>
+            <ul>
+                <li><strong>Sobrecarga cognitiva:</strong> El Infinite Scroll puede causar desorientación y consumo excesivo sin propósito.</li>
+                <li><strong>Acciones accidentales:</strong> Gestos sensibles pueden activarse sin intención del usuario.</li>
+                <li><strong>Falta de control:</strong> Algunos patrones priorizan engagement sobre el control del usuario de su tiempo.</li>
+                <li><strong>Dependencia del feedback visual:</strong> Sin indicadores claros, los usuarios pueden confundirse sobre el estado de sus acciones.</li>
+            </ul>
+
+            <h4>Recomendaciones</h4>
+            <ol>
+                <li><strong>Balance entre engagement y bienestar:</strong> Considerar implementar controles de tiempo de uso sin comprometer la experiencia.</li>
+                <li><strong>Mejorar indicadores visuales:</strong> Asegurar que todos los estados y transiciones sean claros y predecibles.</li>
+                <li><strong>Calibración de sensibilidad:</strong> Ajustar la sensibilidad de gestos para minimizar activaciones accidentales.</li>
+                <li><strong>Educación del usuario:</strong> Proporcionar tooltips contextuales para nuevos patrones o funciones.</li>
+            </ol>
+        </div>
+
+        <!-- Capturas Conceptuales -->
+        <div class="card">
+            <h3><i class="fas fa-images"></i> Resumen de Capturas Conceptuales</h3>
+            
+            <div class="grid">
+                <div class="screenshot-placeholder">
+                    <i class="fas fa-bars"></i>
+                    <h4>1. Bottom Navigation</h4>
+                    <p style="font-size: 14px;">Barra inferior con 5 iconos<br>Estado activo con color distintivo</p>
+                </div>
+                
+                <div class="screenshot-placeholder" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <i class="fas fa-arrows-alt-v"></i>
+                    <h4>2. Infinite Scroll + Pull-to-Refresh</h4>
+                    <p style="font-size: 14px;">Feed vertical continuo<br>Indicador circular en la parte superior</p>
+                </div>
+                
+                <div class="screenshot-placeholder" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                    <i class="fas fa-circle"></i>
+                    <h4>3. Stories Carousel</h4>
+                    <p style="font-size: 14px;">Círculos horizontales con avatares<br>Borde gradiente para no vistas</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

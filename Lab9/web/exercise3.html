@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 3: Navegación Híbrida - IHC</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Estilos para el Prototipo Móvil */
+        .mobile-mockup {
+            width: 320px;
+            height: 640px;
+            background: #f5f5f5;
+            border-radius: 30px;
+            border: 12px solid #333;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background: #2563eb;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: white;
+            position: relative;
+        }
+
+        .bottom-nav {
+            background: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 10;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #9ca3af;
+            font-size: 10px;
+            cursor: pointer;
+            width: 25%;
+            transition: color 0.3s;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: #2563eb;
+        }
+
+        /* Navigation Drawer */
+        .drawer-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 20;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .drawer-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .drawer {
+            position: absolute;
+            top: 0;
+            left: -80%;
+            width: 80%;
+            height: 100%;
+            background: white;
+            z-index: 30;
+            transition: left 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .drawer.open {
+            left: 0;
+        }
+
+        .drawer-header {
+            background: #1e40af;
+            padding: 30px 20px 20px;
+            color: white;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            background: #60a5fa;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .drawer-menu {
+            padding: 10px 0;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .drawer-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #374151;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .drawer-item:hover {
+            background: #f3f4f6;
+        }
+
+        .drawer-item i {
+            width: 20px;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        /* Content Views */
+        .view-section {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2563eb;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: 15px;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Tree Map */
+        .tree-node {
+            margin-left: 20px;
+            border-left: 2px solid #e5e7eb;
+            padding-left: 15px;
+            position: relative;
+        }
+        .tree-node::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 12px;
+            height: 2px;
+            background: #e5e7eb;
+        }
+        .tree-item {
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-sitemap"></i> Ejercicio 3: Navegación Híbrida</h1>
+            <nav>
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="exercise1.html" class="nav-link">Ejercicio 1</a>
+                <a href="exercise2.html" class="nav-link">Ejercicio 2</a>
+                <a href="exercise3.html" class="nav-link active">Ejercicio 3</a>
+                <a href="exercise4.html" class="nav-link">Ejercicio 4</a>
+                <a href="exercise5.html" class="nav-link">Ejercicio 5</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Arquitectura de Navegación "SaludFit"</h2>
+            <p><strong>Estrategia:</strong> Bottom Navigation + Navigation Drawer Híbrido</p>
+            <p>Diseño de una estructura de navegación eficiente para una aplicación de fitness, combinando acceso rápido a funciones frecuentes con un menú lateral para opciones secundarias.</p>
+        </div>
+
+        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+            <!-- Columna Izquierda: Análisis y Justificación -->
+            <div>
+                <div class="card">
+                    <h3>Justificación de Usabilidad</h3>
+                    <div style="overflow-x: auto;">
+                        <table style="font-size: 14px;">
+                            <thead>
+                                <tr>
+                                    <th>Decisión</th>
+                                    <th>Justificación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Bottom Nav (4 secciones)</strong></td>
+                                    <td>Son las funciones más usadas (80% del uso). El acceso con una mano es crítico en apps de fitness.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Configuración en Drawer</strong></td>
+                                    <td>Se accede esporádicamente (regla 80/20). Liberamos espacio en bottom nav para funciones frecuentes.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Panel como inicio</strong></td>
+                                    <td>Hub central que muestra resumen del día. Reduce clics para información contextual.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Estadísticas en bottom</strong></td>
+                                    <td>Los usuarios de fitness consultan constantemente su progreso. Debe estar a un tap de distancia.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Alimentación separada</strong></td>
+                                    <td>Son flujos diferentes a las rutinas. Separarlos mejora el modelo mental.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Mapa de Navegación</h3>
+                    <div class="tree-item"><strong>📱 SaludFit App</strong></div>
+                    <div class="tree-node">
+                        <div class="tree-item"><strong>[Bottom Navigation]</strong></div>
+                        <div class="tree-node">
+                            <div class="tree-item"><i class="fas fa-home text-blue"></i> Panel Principal (Home)</div>
+                            <div class="tree-node">
+                                <div class="tree-item">Resumen de actividad</div>
+                                <div class="tree-item">Progreso de objetivos</div>
+                            </div>
+                        </div>
+                        <div class="tree-node">
+                            <div class="tree-item"><i class="fas fa-dumbbell text-blue"></i> Rutinas</div>
+                            <div class="tree-node">
+                                <div class="tree-item">Lista de rutinas</div>
+                                <div class="tree-item">Iniciar entrenamiento</div>
+                            </div>
+                        </div>
+                        <div class="tree-node">
+                            <div class="tree-item"><i class="fas fa-apple-alt text-blue"></i> Alimentación</div>
+                            <div class="tree-node">
+                                <div class="tree-item">Diario de comidas</div>
+                                <div class="tree-item">Escanear código</div>
+                            </div>
+                        </div>
+                        <div class="tree-node">
+                            <div class="tree-item"><i class="fas fa-chart-bar text-blue"></i> Estadísticas</div>
+                        </div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="tree-item"><strong>[Navigation Drawer]</strong></div>
+                        <div class="tree-node">
+                            <div class="tree-item"><i class="fas fa-user"></i> Perfil</div>
+                            <div class="tree-item"><i class="fas fa-cog"></i> Configuración</div>
+                            <div class="tree-item"><i class="fas fa-bullseye"></i> Objetivos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Mejoras de Usabilidad</h3>
+                    <ul style="font-size: 14px;">
+                        <li><strong>Prevención de errores:</strong> Bottom Navigation siempre visible previene pérdida de contexto.</li>
+                        <li><strong>Ley de Fitts:</strong> Objetivos grandes en la parte inferior, fáciles de alcanzar con el pulgar.</li>
+                        <li><strong>Modelo mental:</strong> Separación clara entre "hacer" (rutinas) y "revisar" (estadísticas).</li>
+                        <li><strong>Feedback contextual:</strong> Sistema de notificaciones integrado.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Prototipo Interactivo -->
+            <div style="display: flex; justify-content: center; align-items: flex-start;">
+                <div class="mobile-mockup">
+                    <!-- Drawer -->
+                    <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
+                    <div class="drawer" id="drawer">
+                        <div class="drawer-header">
+                            <div class="user-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div style="font-weight: bold;">Usuario Fitness</div>
+                            <div style="font-size: 12px; opacity: 0.8;">usuario@saludfit.com</div>
+                        </div>
+                        <div class="drawer-menu">
+                            <div class="drawer-item"><i class="fas fa-user-circle"></i> Perfil de usuario</div>
+                            <div class="drawer-item"><i class="fas fa-cog"></i> Configuración</div>
+                            <div class="drawer-item"><i class="fas fa-bullseye"></i> Objetivos y metas</div>
+                            <div class="drawer-item"><i class="fas fa-sync"></i> Sincronización</div>
+                            <div class="drawer-item"><i class="fas fa-question-circle"></i> Ayuda y soporte</div>
+                            <div class="drawer-item" style="color: #ef4444;"><i class="fas fa-sign-out-alt" style="color: #ef4444;"></i> Cerrar sesión</div>
+                        </div>
+                    </div>
+
+                    <!-- App Header -->
+                    <div class="app-header">
+                        <i class="fas fa-bars" style="cursor: pointer;" onclick="toggleDrawer()"></i>
+                        <span id="header-title">SaludFit</span>
+                        <i class="fas fa-bell"></i>
+                    </div>
+
+                    <!-- App Content -->
+                    <div class="app-content">
+                        <!-- View: Home -->
+                        <div id="view-home" class="view-section active">
+                            <h3 style="margin-top: 0;">Resumen del Día</h3>
+                            <div class="stat-card">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Pasos</span>
+                                    <i class="fas fa-shoe-prints text-blue"></i>
+                                </div>
+                                <h2 style="margin: 10px 0;">8,432</h2>
+                                <div style="height: 4px; background: #e5e7eb; border-radius: 2px;">
+                                    <div style="width: 70%; height: 100%; background: #2563eb; border-radius: 2px;"></div>
+                                </div>
+                            </div>
+                            <div class="stat-card" style="border-left-color: #f59e0b;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Calorías</span>
+                                    <i class="fas fa-fire text-orange"></i>
+                                </div>
+                                <h2 style="margin: 10px 0;">1,250</h2>
+                                <small>Meta: 2,000 kcal</small>
+                            </div>
+                            <h4>Próximo Recordatorio</h4>
+                            <div style="background: #eff6ff; padding: 10px; border-radius: 8px; display: flex; gap: 10px; align-items: center;">
+                                <i class="fas fa-tint text-blue"></i>
+                                <div>
+                                    <strong>Beber Agua</strong>
+                                    <div style="font-size: 12px;">Hace 2 horas</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- View: Rutinas -->
+                        <div id="view-rutinas" class="view-section">
+                            <h3 style="margin-top: 0;">Mis Rutinas</h3>
+                            <div class="stat-card" style="border-left-color: #10b981;">
+                                <h4>Full Body - Principiante</h4>
+                                <p style="font-size: 12px; color: #6b7280;">45 min • 12 ejercicios</p>
+                                <button class="btn" style="padding: 5px 10px; font-size: 12px; margin-top: 5px;">Iniciar</button>
+                            </div>
+                            <div class="stat-card" style="border-left-color: #10b981;">
+                                <h4>Cardio HIIT</h4>
+                                <p style="font-size: 12px; color: #6b7280;">20 min • Alta intensidad</p>
+                                <button class="btn" style="padding: 5px 10px; font-size: 12px; margin-top: 5px;">Iniciar</button>
+                            </div>
+                        </div>
+
+                        <!-- View: Alimentación -->
+                        <div id="view-alimentacion" class="view-section">
+                            <h3 style="margin-top: 0;">Diario de Comidas</h3>
+                            <div style="text-align: center; padding: 20px; border: 2px dashed #e5e7eb; border-radius: 12px; margin-bottom: 20px;">
+                                <i class="fas fa-camera" style="font-size: 24px; color: #9ca3af; margin-bottom: 10px;"></i>
+                                <p style="margin: 0; font-size: 14px;">Escanear código de barras</p>
+                            </div>
+                            <h4>Hoy</h4>
+                            <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;">
+                                <span><i class="fas fa-coffee"></i> Desayuno</span>
+                                <span>450 kcal</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;">
+                                <span><i class="fas fa-utensils"></i> Almuerzo</span>
+                                <span>-</span>
+                            </div>
+                        </div>
+
+                        <!-- View: Estadísticas -->
+                        <div id="view-estadisticas" class="view-section">
+                            <h3 style="margin-top: 0;">Mi Progreso</h3>
+                            <div style="height: 150px; display: flex; align-items: flex-end; justify-content: space-between; padding: 10px 0;">
+                                <div style="width: 12%; height: 40%; background: #93c5fd; border-radius: 4px;"></div>
+                                <div style="width: 12%; height: 60%; background: #93c5fd; border-radius: 4px;"></div>
+                                <div style="width: 12%; height: 30%; background: #93c5fd; border-radius: 4px;"></div>
+                                <div style="width: 12%; height: 80%; background: #2563eb; border-radius: 4px;"></div>
+                                <div style="width: 12%; height: 50%; background: #93c5fd; border-radius: 4px;"></div>
+                                <div style="width: 12%; height: 70%; background: #93c5fd; border-radius: 4px;"></div>
+                                <div style="width: 12%; height: 45%; background: #93c5fd; border-radius: 4px;"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 10px; color: #6b7280; margin-top: 5px;">
+                                <span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span>
+                            </div>
+                            <div class="stat-card" style="margin-top: 20px; border-left-color: #8b5cf6;">
+                                <h4>Logros Desbloqueados</h4>
+                                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                    <i class="fas fa-medal text-yellow" style="font-size: 24px; color: #fbbf24;"></i>
+                                    <i class="fas fa-trophy text-yellow" style="font-size: 24px; color: #fbbf24;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Navigation -->
+                    <div class="bottom-nav">
+                        <div class="nav-item active" onclick="switchTab('home')">
+                            <div style="position: relative;">
+                                <i class="fas fa-home"></i>
+                                <div class="notification-badge">3</div>
+                            </div>
+                            <span>Panel</span>
+                        </div>
+                        <div class="nav-item" onclick="switchTab('rutinas')">
+                            <i class="fas fa-dumbbell"></i>
+                            <span>Rutinas</span>
+                        </div>
+                        <div class="nav-item" onclick="switchTab('alimentacion')">
+                            <i class="fas fa-apple-alt"></i>
+                            <span>Comidas</span>
+                        </div>
+                        <div class="nav-item" onclick="switchTab('estadisticas')">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Stats</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDrawer() {
+            const drawer = document.getElementById('drawer');
+            const overlay = document.getElementById('drawer-overlay');
+            
+            if (drawer.classList.contains('open')) {
+                drawer.classList.remove('open');
+                overlay.classList.remove('open');
+            } else {
+                drawer.classList.add('open');
+                overlay.classList.add('open');
+            }
+        }
+
+        function switchTab(tabName) {
+            // Update Nav Items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+
+            // Update Content Views
+            document.querySelectorAll('.view-section').forEach(view => {
+                view.classList.remove('active');
+            });
+            document.getElementById(`view-${tabName}`).classList.add('active');
+
+            // Update Header Title
+            const titles = {
+                'home': 'SaludFit',
+                'rutinas': 'Rutinas',
+                'alimentacion': 'Alimentación',
+                'estadisticas': 'Estadísticas'
+            };
+            document.getElementById('header-title').textContent = titles[tabName];
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 4: Gestos y Feedback - IHC</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Estilos para el Simulador de Gestos */
+        .gesture-simulator {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #f3f4f6;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sim-header {
+            background: white;
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .sim-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            position: relative;
+        }
+
+        /* Pull to Refresh */
+        .pull-indicator {
+            height: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: height 0.2s;
+            background: #f3f4f6;
+            color: #6b7280;
+            font-size: 14px;
+            gap: 8px;
+        }
+
+        .pull-indicator.loading {
+            height: 50px;
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* News Card */
+        .news-card-container {
+            position: relative;
+            margin-bottom: 15px;
+            height: 120px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .news-card-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            border-radius: 12px;
+        }
+
+        .bg-save { background: #22c55e; color: white; justify-content: flex-start; }
+        .bg-delete { background: #ef4444; color: white; justify-content: flex-end; }
+
+        .news-card {
+            position: relative;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            height: 100%;
+            display: flex;
+            gap: 15px;
+            cursor: grab;
+            transition: transform 0.1s, box-shadow 0.2s;
+            z-index: 5;
+            user-select: none;
+        }
+
+        .news-card:active {
+            cursor: grabbing;
+        }
+
+        .news-card.elevated {
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            z-index: 20;
+        }
+
+        .news-img {
+            width: 80px;
+            height: 80px;
+            background: #e5e7eb;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .news-content h4 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .news-content p {
+            margin: 0;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        /* Context Menu (Long Press) */
+        .context-menu {
+            position: absolute;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            padding: 10px;
+            display: none;
+            z-index: 100;
+            animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .context-menu.active {
+            display: block;
+        }
+
+        .menu-option {
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .menu-option:hover {
+            background: #f3f4f6;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Snackbar */
+        .snackbar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 50;
+            width: 90%;
+            justify-content: space-between;
+        }
+
+        .snackbar.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .snackbar-action {
+            color: #60a5fa;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        /* Image Zoom (Double Tap) */
+        .zoom-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .zoom-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .zoomed-image {
+            max-width: 90%;
+            max-height: 90%;
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .zoom-overlay.active .zoomed-image {
+            transform: scale(1);
+        }
+
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Controls Panel */
+        .controls-panel {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .control-btn {
+            background: #e5e7eb;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .control-btn:hover {
+            background: #d1d5db;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-fingerprint"></i> Ejercicio 4: Gestos y Feedback</h1>
+            <nav>
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="exercise1.html" class="nav-link">Ejercicio 1</a>
+                <a href="exercise2.html" class="nav-link">Ejercicio 2</a>
+                <a href="exercise3.html" class="nav-link">Ejercicio 3</a>
+                <a href="exercise4.html" class="nav-link active">Ejercicio 4</a>
+                <a href="exercise5.html" class="nav-link">Ejercicio 5</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Mejora de App de Lectura de Noticias</h2>
+            <p><strong>Enfoque:</strong> Gestos Táctiles y Feedback Visual</p>
+            <p>Implementación de patrones de interacción avanzados como Swipe, Pull-to-Refresh, Long Press y Double Tap para mejorar la eficiencia y experiencia de usuario.</p>
+        </div>
+
+        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+            <!-- Columna Izquierda: Documentación -->
+            <div>
+                <div class="card">
+                    <h3>Tabla Resumen de Gestos</h3>
+                    <div style="overflow-x: auto;">
+                        <table style="font-size: 12px;">
+                            <thead>
+                                <tr>
+                                    <th>Gesto</th>
+                                    <th>Acción</th>
+                                    <th>Feedback</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Swipe →</strong></td>
+                                    <td>Guardar</td>
+                                    <td>Fondo verde + ícono marcador</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Swipe ←</strong></td>
+                                    <td>Ocultar</td>
+                                    <td>Fondo rojo + ícono X</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Pull-to-Refresh</strong></td>
+                                    <td>Actualizar</td>
+                                    <td>Spinner + texto dinámico</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Long Press</strong></td>
+                                    <td>Menú Contextual</td>
+                                    <td>Elevación + menú radial</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Double Tap</strong></td>
+                                    <td>Zoom Imagen</td>
+                                    <td>Overlay oscuro + escala</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Patrones de Feedback</h3>
+                    <ul style="font-size: 14px;">
+                        <li><strong>Snackbar con Acción:</strong> Permite deshacer acciones destructivas (eliminar/guardar).</li>
+                        <li><strong>Loading States:</strong> Skeleton screens durante la carga inicial y spinner en refresh.</li>
+                        <li><strong>Micro-animaciones:</strong> Transiciones suaves en tarjetas y menús.</li>
+                        <li><strong>Haptic Feedback (Simulado):</strong> Vibración visual en la interfaz al completar acciones.</li>
+                    </ul>
+                </div>
+
+                <div class="controls-panel">
+                    <h4>Controles de Simulación</h4>
+                    <p style="font-size: 12px; color: #6b7280; margin-bottom: 10px;">Usa el mouse para simular los gestos táctiles en el dispositivo de la derecha.</p>
+                    <button class="control-btn" onclick="resetDemo()">Reiniciar Demo</button>
+                    <button class="control-btn" onclick="triggerSnackbar('Prueba de Snackbar')">Probar Snackbar</button>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Simulador -->
+            <div style="display: flex; justify-content: center;">
+                <div class="gesture-simulator" id="simulator">
+                    <!-- Header -->
+                    <div class="sim-header">
+                        <i class="fas fa-bars"></i>
+                        <span style="font-weight: bold;">Noticias</span>
+                        <i class="fas fa-search"></i>
+                    </div>
+
+                    <!-- Pull Indicator -->
+                    <div class="pull-indicator" id="pull-indicator">
+                        <i class="fas fa-spinner spinner"></i>
+                        <span>Actualizando...</span>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="sim-content" id="news-feed">
+                        <!-- News Items will be injected here -->
+                    </div>
+
+                    <!-- Snackbar -->
+                    <div class="snackbar" id="snackbar">
+                        <span id="snackbar-text">Acción completada</span>
+                        <span class="snackbar-action" onclick="undoAction()">DESHACER</span>
+                    </div>
+
+                    <!-- Context Menu -->
+                    <div class="context-menu" id="context-menu">
+                        <div class="menu-option"><i class="fas fa-share-alt"></i> Compartir</div>
+                        <div class="menu-option"><i class="fas fa-bookmark"></i> Guardar</div>
+                        <div class="menu-option"><i class="fas fa-flag"></i> Reportar</div>
+                        <div class="menu-option"><i class="fas fa-copy"></i> Copiar enlace</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zoom Overlay -->
+    <div class="zoom-overlay" id="zoom-overlay" onclick="closeZoom()">
+        <img src="" alt="Zoomed Image" class="zoomed-image" id="zoomed-image">
+    </div>
+
+    <script>
+        // Datos de prueba
+        const newsData = [
+            { id: 1, title: "Avances en IA Generativa", desc: "Nuevos modelos prometen revolucionar la industria creativa.", img: "https://picsum.photos/id/1/200/200" },
+            { id: 2, title: "Exploración Espacial 2025", desc: "La misión a Marte entra en su fase crítica de preparación.", img: "https://picsum.photos/id/2/200/200" },
+            { id: 3, title: "Sostenibilidad Urbana", desc: "Ciudades inteligentes reducen su huella de carbono un 30%.", img: "https://picsum.photos/id/3/200/200" },
+            { id: 4, title: "El Futuro del Trabajo Remoto", desc: "Empresas adoptan modelos híbridos permanentes.", img: "https://picsum.photos/id/4/200/200" }
+        ];
+
+        let lastDeletedItem = null;
+        let lastDeletedIndex = -1;
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            renderNews();
+            setupPullToRefresh();
+        });
+
+        function renderNews() {
+            const feed = document.getElementById('news-feed');
+            feed.innerHTML = '';
+            newsData.forEach((news, index) => {
+                const card = createNewsCard(news, index);
+                feed.appendChild(card);
+            });
+        }
+
+        function createNewsCard(news, index) {
+            const container = document.createElement('div');
+            container.className = 'news-card-container';
+            container.id = `news-${index}`;
+
+            // Backgrounds for swipe
+            const bgSave = document.createElement('div');
+            bgSave.className = 'news-card-bg bg-save';
+            bgSave.innerHTML = '<i class="fas fa-bookmark"></i>';
+            
+            const bgDelete = document.createElement('div');
+            bgDelete.className = 'news-card-bg bg-delete';
+            bgDelete.innerHTML = '<i class="fas fa-trash"></i>';
+
+            // Card Content
+            const card = document.createElement('div');
+            card.className = 'news-card';
+            card.innerHTML = `
+                <img src="${news.img}" class="news-img" alt="News" ondblclick="zoomImage('${news.img}')">
+                <div class="news-content">
+                    <h4>${news.title}</h4>
+                    <p>${news.desc}</p>
+                </div>
+            `;
+
+            // Event Listeners for Gestures
+            setupSwipe(card, container, index);
+            setupLongPress(card, news);
+
+            container.appendChild(bgSave);
+            container.appendChild(bgDelete);
+            container.appendChild(card);
+
+            return container;
+        }
+
+        // --- Swipe Logic ---
+        function setupSwipe(element, container, index) {
+            let startX = 0;
+            let currentX = 0;
+            let isDragging = false;
+
+            element.addEventListener('mousedown', start);
+            element.addEventListener('touchstart', start);
+
+            function start(e) {
+                if (e.target.tagName === 'IMG') return; // Allow double tap on image
+                isDragging = true;
+                startX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+                element.style.transition = 'none';
+                
+                document.addEventListener('mousemove', move);
+                document.addEventListener('touchmove', move);
+                document.addEventListener('mouseup', end);
+                document.addEventListener('touchend', end);
+            }
+
+            function move(e) {
+                if (!isDragging) return;
+                const x = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+                currentX = x - startX;
+                
+                // Limit movement
+                if (Math.abs(currentX) < 200) {
+                    element.style.transform = `translateX(${currentX}px)`;
+                    
+                    // Visual feedback opacity
+                    const opacity = Math.min(Math.abs(currentX) / 100, 1);
+                    const bgSave = container.querySelector('.bg-save');
+                    const bgDelete = container.querySelector('.bg-delete');
+                    
+                    if (currentX > 0) {
+                        bgSave.style.opacity = opacity;
+                        bgDelete.style.opacity = 0;
+                    } else {
+                        bgSave.style.opacity = 0;
+                        bgDelete.style.opacity = opacity;
+                    }
+                }
+            }
+
+            function end() {
+                isDragging = false;
+                element.style.transition = 'transform 0.3s ease';
+                
+                document.removeEventListener('mousemove', move);
+                document.removeEventListener('touchmove', move);
+                document.removeEventListener('mouseup', end);
+                document.removeEventListener('touchend', end);
+
+                if (currentX > 100) {
+                    // Swipe Right (Save)
+                    element.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        triggerSnackbar('Artículo guardado en "Leer después"');
+                        resetCard(element);
+                    }, 300);
+                } else if (currentX < -100) {
+                    // Swipe Left (Delete)
+                    element.style.transform = 'translateX(-100%)';
+                    setTimeout(() => {
+                        deleteItem(index);
+                    }, 300);
+                } else {
+                    // Reset
+                    element.style.transform = 'translateX(0)';
+                }
+                currentX = 0;
+            }
+        }
+
+        function resetCard(element) {
+            element.style.transform = 'translateX(0)';
+        }
+
+        function deleteItem(index) {
+            const container = document.getElementById(`news-${index}`);
+            if (container) {
+                container.style.height = '0';
+                container.style.margin = '0';
+                setTimeout(() => container.remove(), 300);
+                
+                lastDeletedItem = newsData[index];
+                lastDeletedIndex = index;
+                triggerSnackbar('Noticia ocultada');
+            }
+        }
+
+        // --- Pull to Refresh Logic ---
+        function setupPullToRefresh() {
+            const feed = document.getElementById('news-feed');
+            const indicator = document.getElementById('pull-indicator');
+            let startY = 0;
+            let isPulling = false;
+
+            feed.addEventListener('mousedown', (e) => {
+                if (feed.scrollTop === 0) {
+                    isPulling = true;
+                    startY = e.clientY;
+                }
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isPulling) return;
+                const pull = e.clientY - startY;
+                if (pull > 0 && pull < 100) {
+                    indicator.style.height = `${pull}px`;
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (!isPulling) return;
+                isPulling = false;
+                if (parseInt(indicator.style.height) > 50) {
+                    refreshFeed();
+                } else {
+                    indicator.style.height = '0';
+                }
+            });
+        }
+
+        function refreshFeed() {
+            const indicator = document.getElementById('pull-indicator');
+            indicator.classList.add('loading');
+            indicator.style.height = '50px';
+            
+            setTimeout(() => {
+                indicator.classList.remove('loading');
+                indicator.style.height = '0';
+                
+                // Add new item
+                const newItem = { 
+                    id: Date.now(), 
+                    title: "Nueva Noticia " + new Date().toLocaleTimeString(), 
+                    desc: "Contenido actualizado recientemente.", 
+                    img: "https://picsum.photos/200/200?random=" + Date.now() 
+                };
+                newsData.unshift(newItem);
+                renderNews();
+                triggerSnackbar('Feed actualizado: +1 noticia');
+            }, 1500);
+        }
+
+        // --- Long Press Logic ---
+        function setupLongPress(element, news) {
+            let timer;
+            
+            element.addEventListener('mousedown', () => {
+                timer = setTimeout(() => {
+                    showContextMenu(element);
+                }, 500);
+            });
+
+            element.addEventListener('mouseup', () => clearTimeout(timer));
+            element.addEventListener('mousemove', () => clearTimeout(timer));
+            element.addEventListener('mouseleave', () => clearTimeout(timer));
+        }
+
+        function showContextMenu(element) {
+            const menu = document.getElementById('context-menu');
+            const rect = element.getBoundingClientRect();
+            const simRect = document.getElementById('simulator').getBoundingClientRect();
+            
+            menu.style.top = (rect.top - simRect.top + 20) + 'px';
+            menu.style.left = (rect.left - simRect.left + 20) + 'px';
+            menu.classList.add('active');
+            element.classList.add('elevated');
+
+            // Close on click outside
+            const closeMenu = (e) => {
+                if (!menu.contains(e.target)) {
+                    menu.classList.remove('active');
+                    element.classList.remove('elevated');
+                    document.removeEventListener('mousedown', closeMenu);
+                }
+            };
+            setTimeout(() => document.addEventListener('mousedown', closeMenu), 10);
+        }
+
+        // --- Double Tap Zoom ---
+        function zoomImage(src) {
+            const overlay = document.getElementById('zoom-overlay');
+            const img = document.getElementById('zoomed-image');
+            img.src = src;
+            overlay.classList.add('active');
+        }
+
+        function closeZoom() {
+            document.getElementById('zoom-overlay').classList.remove('active');
+        }
+
+        // --- Snackbar Logic ---
+        let snackbarTimeout;
+        function triggerSnackbar(text) {
+            const snackbar = document.getElementById('snackbar');
+            document.getElementById('snackbar-text').textContent = text;
+            snackbar.classList.add('show');
+            
+            clearTimeout(snackbarTimeout);
+            snackbarTimeout = setTimeout(() => {
+                snackbar.classList.remove('show');
+            }, 3000);
+        }
+
+        function undoAction() {
+            if (lastDeletedItem) {
+                // Restore logic would go here (simplified for demo)
+                alert("Acción deshecha (Simulación)");
+                document.getElementById('snackbar').classList.remove('show');
+            }
+        }
+
+        function resetDemo() {
+            renderNews();
+        }
+    </script>
+</body>
+</html>
